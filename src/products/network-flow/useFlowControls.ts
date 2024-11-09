@@ -66,3 +66,5 @@ export const useFlowControls = (graph: Graph) => {
     makingSink,
   }
 };
+
+export type NetworkFlowControls = ReturnType<typeof useFlowControls>;

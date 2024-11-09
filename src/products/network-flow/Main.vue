@@ -2,19 +2,23 @@
   import { ref } from "vue";
   import { useGraph } from "@graph/useGraph";
   import Graph from "@graph/Graph.vue";
-  import Button from "@playground/ui/Button.vue";
   import { useFlowControls } from "./useFlowControls";
-import colors from "@utils/colors";
+  import colors from "@utils/colors";
+  import SourceSinkControls from "./SourceSinkControls.vue";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
     settings: {
       persistentStorageKey: "network-flow",
+      edgeInputToLabel: (input) => {
+        const num = Number(input);
+        const isValid = !isNaN(num) && num >= 0 && num < 100;
+        return isValid ? input : undefined;
+      }
     },
   });
 
-  const { makeSource, makingSource, makeSink, makingSink } =
-    useFlowControls(graph);
+  const controls = useFlowControls(graph);
 </script>
 
 <template>
@@ -27,19 +31,7 @@ import colors from "@utils/colors";
     </div>
 
     <div class="absolute top-0 p-3">
-      <Button
-        v-if="!makingSource"
-        @click="makeSource"
-      >
-        Make Source
-      </Button>
-
-      <Button
-        v-else
-        :style="{ backgroundColor: colors.RED_500, color: colors.WHITE }"
-      >
-        Cancel
-      </Button>
+      <SourceSinkControls :controls="controls" />
     </div>
   </div>
 </template>
