@@ -19,10 +19,11 @@ const graph = useGraph(graphEl, {
 });
 
 useSetupGraph(graph);
+// , backStep: kBackStep, forwardStep: kForwardsStep
 const { kruskal } = useKruskal(graph);
-const { prims } = usePrims(graph);
+const { prims, forwardStep, backwardStep, currentStep } = usePrims(graph);
 
-type Algorithms = "kruskal" | "prim" | undefined
+type Algorithms = "kruskal" | "prim" | undefined;
 
 const currentAlgorithm = ref<Algorithms>("kruskal");
 const algorithms = [
@@ -47,6 +48,9 @@ const updateAlgorithm = (newAlgorithm: Algorithms) => {
   colorizeGraph()
 }
 
+const backardprims = () => { backwardStep(); colorizeGraph() }
+const forwar = () => { forwardStep(); colorizeGraph() }
+
 graph.subscribe("onStructureChange", colorizeGraph);
 graph.subscribe("onEdgeLabelChange", colorizeGraph);
 </script>
@@ -60,9 +64,9 @@ graph.subscribe("onEdgeLabelChange", colorizeGraph);
       </Button>
     </div>
     <div v-if="currentAlgorithm" class="absolute m-3 flex gap-3 z-50 bottom-2 right-2">
-      <Button class="text-4xl px-4">←</Button>
+      <Button class="text-4xl px-4" @click="backardprims">←</Button>
       <!-- make disabled at end -->
-      <Button class="text-4xl px-4">→</Button>
+      <Button class="text-4xl px-4" @click="forwar">→</Button>
     </div>
     <Graph @graph-ref="(el) => (graphEl = el)" :graph="graph" />
   </div>
