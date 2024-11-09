@@ -7,6 +7,7 @@
   import SourceSinkControls from "./SourceSinkControls.vue";
   import { useEdgeThickener } from "./useEdgeThickener";
   import { FLOW_GRAPH_SETTINGS } from "./settings";
+  import { useFlowProperties } from "./useFlowProperties";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
@@ -15,6 +16,7 @@
 
   useEdgeThickener(graph);
   const controls = useFlowControls(graph);
+  const { minCut } = useFlowProperties(graph);
 </script>
 
 <template>
@@ -28,6 +30,12 @@
 
     <div class="absolute top-0 p-3">
       <SourceSinkControls :controls="controls" />
+    </div>
+
+    <div class="absolute top-0 right-0 p-3 text-white">
+      <span class="font-bold text-xl">
+        Min Cut: {{ minCut ?? "N/A" }}
+      </span>
     </div>
   </div>
 </template>

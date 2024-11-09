@@ -44,6 +44,7 @@ export const useFlowControls = (graph: Graph) => {
       if (node.label === SOURCE_LABEL) node.label = getNewLabel();
     });
     node.label = SOURCE_LABEL;
+    graph.trackGraphState();
     makingSource.value = false;
   }
 
@@ -55,6 +56,7 @@ export const useFlowControls = (graph: Graph) => {
       if (node.label === SINK_LABEL) node.label = getNewLabel();
     });
     node.label = SINK_LABEL;
+    graph.trackGraphState();
     makingSink.value = false;
   }
 
