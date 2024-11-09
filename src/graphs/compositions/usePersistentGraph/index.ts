@@ -191,7 +191,7 @@ export const usePersistentGraph = (
   }
 
   return {
-    graph,
+    ...graph,
 
     /**
      * track the graph state on local storage
