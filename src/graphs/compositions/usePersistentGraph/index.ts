@@ -190,5 +190,16 @@ export const usePersistentGraph = (
     }
   }
 
-  return graph
+  return {
+    graph,
+
+    /**
+     * track the graph state on local storage
+     */
+    trackGraphState,
+    /**
+     * track the graph options on local storage
+     */
+    trackOptions,
+  }
 }
