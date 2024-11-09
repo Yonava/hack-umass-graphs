@@ -81,11 +81,18 @@ export const useKruskal = (graph: Graph) => {
     if (canBackwardStep.value) currentStep.value--;
   };
 
+  const setStep = (newStep: number) => {
+    if (newStep > graph.nodes.value.length - 1 || newStep < 1) throw new Error('step out of range')
+    currentStep.value = newStep
+  }
+
   return {
     kruskal,
     backwardStep,
     forwardStep,
+    setStep,
     canBackwardStep,
     canForwardStep,
+
   };
 };

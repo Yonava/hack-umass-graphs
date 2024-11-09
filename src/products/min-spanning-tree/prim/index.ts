@@ -3,7 +3,7 @@ import { clone } from "@utils/clone";
 import { ref, computed } from "vue";
 
 export const usePrims = (graph: Graph) => {
-  
+
   const currentStep = ref(graph.nodes.value.length - 1);
 
   graph.subscribe('onStructureChange', () => currentStep.value = graph.nodes.value.length - 1)
@@ -71,10 +71,16 @@ export const usePrims = (graph: Graph) => {
     if (canBackwardStep.value) currentStep.value--;
   };
 
+  const setStep = (newStep: number) => {
+    if (newStep > graph.nodes.value.length - 1 || newStep < 1) throw new Error('step out of range')
+    currentStep.value = newStep
+  }
+
   return {
     prims,
     backwardStep,
     forwardStep,
+    setStep,
     canBackwardStep,
     canForwardStep,
   };

@@ -63,61 +63,86 @@ const updateAlgorithm = (newAlgorithm: Algorithm) => {
 };
 
 const stepBackwards = () => {
-  currentAlgorithm.value === 'kruskal' ? kBackwardStep() : pBackwardStep()
+  currentAlgorithm.value === "kruskal" ? kBackwardStep() : pBackwardStep();
   colorizeGraph();
 };
 
 const stepForwards = () => {
-  currentAlgorithm.value === 'kruskal' ? kForwardStep() : pForwardStep()
+  currentAlgorithm.value === "kruskal" ? kForwardStep() : pForwardStep();
   colorizeGraph();
 };
 
 const computedCanForwardStep = computed(() => {
-  return currentAlgorithm.value === 'kruskal' ? kCanForwardStep.value : pCanForwardStep.value
-})
+  return currentAlgorithm.value === "kruskal"
+    ? kCanForwardStep.value
+    : pCanForwardStep.value;
+});
 const computedCanBackwardStep = computed(() => {
-  return currentAlgorithm.value === 'kruskal' ? kCanBackwardStep.value : pCanBackwardStep.value
-})
+  return currentAlgorithm.value === "kruskal"
+    ? kCanBackwardStep.value
+    : pCanBackwardStep.value;
+});
 
 const handleStepKeys = (e: KeyboardEvent) => {
-  if (e.key === '[' && computedCanBackwardStep.value) {
-    stepBackwards()
-  } else if (e.key === ']' && computedCanForwardStep.value) {
-    stepForwards()
+  if (e.key === "[" && computedCanBackwardStep.value) {
+    stepBackwards();
+  } else if (e.key === "]" && computedCanForwardStep.value) {
+    stepForwards();
   }
-}
+};
+
+const showSimulation = ref(false);
 
 graph.subscribe("onStructureChange", colorizeGraph);
 graph.subscribe("onEdgeLabelChange", colorizeGraph);
-graph.subscribe("onKeydown", handleStepKeys)
+graph.subscribe("onKeydown", handleStepKeys);
 </script>
 
 <template>
   <div class="w-full h-full relative">
-    <div class="absolute m-3 flex gap-3 z-50">
+    <Button
+      v-if="showSimulation"
+      @click="showSimulation = false"
+      class="absolute m-3 z-50"
+      >Exit Simulation</Button
+    >
+    <div v-else class="absolute m-3 flex gap-3 z-50">
       <Button
         v-for="(algorithm, index) in algorithms"
         :key="index"
         @click="updateAlgorithm(algorithm.value)"
-        :color="currentAlgorithm === algorithm.value ? colors.GREEN_500 : undefined"
+        :color="
+          currentAlgorithm === algorithm.value ? colors.GREEN_500 : undefined
+        "
       >
         {{ algorithm.label }}
       </Button>
     </div>
     <div
-      v-if="currentAlgorithm"
-      class="absolute m-3 flex gap-3 z-50 bottom-2 right-2"
+      v-if="currentAlgorithm && showSimulation"
+      class="absolute m-3 flex gap-3 z-50 bottom-2 w-full justify-center"
     >
-      <Button 
+      <Button
         @click="stepBackwards"
         :color="computedCanBackwardStep ? undefined : colors.SLATE_400"
-        class="text-4xl px-4" 
-      >←</Button>
-      <Button 
+        class="text-4xl h-24 w-24 rounded-full"
+        >◀</Button
+      >
+      <Button class="text-4xl h-24 w-24 rounded-full">⏯</Button>
+      <Button
         @click="stepForwards"
         :color="computedCanForwardStep ? undefined : colors.SLATE_400"
-        class="text-4xl px-4" 
-      >→</Button>
+        class="text-4xl h-24 w-24 rounded-full"
+        >▶</Button
+      >
+    </div>
+    <div
+      v-else-if="currentAlgorithm"
+      class="absolute m-3 flex z-50 bottom-2 flex justify-center w-full"
+    >
+      <Button @click="showSimulation = true" class="text-3xl"
+        >Run Simulation</Button
+      >
     </div>
     <Graph @graph-ref="(el) => (graphEl = el)" :graph="graph" />
   </div>
