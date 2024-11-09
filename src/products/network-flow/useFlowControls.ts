@@ -1,8 +1,8 @@
 import type { GNode, Graph } from "@graph/types";
 import { ref } from "vue";
 
-const SOURCE_LABEL = "S";
-const SINK_LABEL = "T";
+export const SOURCE_LABEL = "S";
+export const SINK_LABEL = "T";
 
 export const useFlowControls = (graph: Graph) => {
 

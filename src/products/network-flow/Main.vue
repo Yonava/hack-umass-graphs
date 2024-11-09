@@ -6,21 +6,14 @@
   import colors from "@utils/colors";
   import SourceSinkControls from "./SourceSinkControls.vue";
   import { useEdgeThickener } from "./useEdgeThickener";
+  import { FLOW_GRAPH_SETTINGS } from "./settings";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
-    settings: {
-      persistentStorageKey: "network-flow",
-      userEditableAddedEdgeLabel: '5',
-      edgeInputToLabel: (input) => {
-        const num = Number(input);
-        const isValid = !isNaN(num) && num >= 0 && num < 100;
-        return isValid ? input : undefined;
-      }
-    },
+    settings: FLOW_GRAPH_SETTINGS,
   });
 
-  useEdgeThickener(graph)
+  useEdgeThickener(graph);
   const controls = useFlowControls(graph);
 </script>
 
