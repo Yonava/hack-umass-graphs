@@ -1,6 +1,7 @@
 import type { GraphSettings } from "@graph/settings";
 
 export const FLOW_GRAPH_SETTINGS: Partial<GraphSettings> = {
+  persistent: true,
   persistentStorageKey: 'network-flow',
   userEditableAddedEdgeLabel: '5',
   edgeInputToLabel: (input) => {

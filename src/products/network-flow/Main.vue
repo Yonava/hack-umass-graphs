@@ -8,6 +8,7 @@
   import { useEdgeThickener } from "./useEdgeThickener";
   import { FLOW_GRAPH_SETTINGS } from "./settings";
   import { useFlowProperties } from "./useFlowProperties";
+  import Button from "@playground/ui/Button.vue";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
@@ -16,7 +17,7 @@
 
   useEdgeThickener(graph);
   const controls = useFlowControls(graph);
-  const { minCut } = useFlowProperties(graph);
+  const { maxFlow, recompute, resetEdges, createResidualEdges } = useFlowProperties(graph);
 </script>
 
 <template>
@@ -32,10 +33,11 @@
       <SourceSinkControls :controls="controls" />
     </div>
 
-    <div class="absolute top-0 right-0 p-3 text-white">
-      <span class="font-bold text-xl">
-        Min Cut: {{ minCut ?? "N/A" }}
-      </span>
+    <div class="absolute top-0 right-0 p-3 text-white flex gap-3">
+      <span class="font-bold text-xl">Max Flow: {{ maxFlow ?? "N/A" }}</span>
+      <Button @click="recompute">recompute</Button>
+      <Button @click="resetEdges">reset edges</Button>
+      <Button @click="createResidualEdges">create residual edges</Button>
     </div>
   </div>
 </template>
