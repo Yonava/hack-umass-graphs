@@ -13,6 +13,11 @@ export const useSetupGraph = (graph: Graph) => {
   graph.subscribe('onNodeAdded', (node) => {
     node.label = getNewLabel();
   })
+
+  graph.subscribe('onEdgeAdded', (edge) => {
+    if (edge.to !== edge.from) return
+    graph.removeEdge(edge.id)
+  })
 };
 
 export const edgeLabelIsPositiveNumber = (input: string): string | undefined => {

@@ -1,15 +1,20 @@
-import type { Graph, GEdge, GNode } from "@graph/types";
+import type { Graph, GEdge } from "@graph/types";
 import { clone } from '@utils/clone'
 
+type Parent = Map<string, string>
+type Rank = Map<string, number>
+
+
 export const useKruskal = (graph: Graph) => {
-  const find = (parent: Map<string, string>, nodeId: string): string => {
+
+  const find = (parent: Parent, nodeId: string): string => {
     if (parent.get(nodeId) !== nodeId) {
       parent.set(nodeId, find(parent, parent.get(nodeId)!));
     }
     return parent.get(nodeId)!;
   };
 
-  const union = (parent: Map<string, string>, rank: Map<string, number>, nodeA: string, nodeB: string) => {
+  const union = (parent: Parent, rank: Rank, nodeA: string, nodeB: string) => {
     const rootA = find(parent, nodeA);
     const rootB = find(parent, nodeB);
 
@@ -51,6 +56,7 @@ export const useKruskal = (graph: Graph) => {
         if (mst.length === graph.nodes.value.length - 1) break;
       }
     }
+
     return mst;
   };
 
