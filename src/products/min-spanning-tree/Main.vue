@@ -24,6 +24,7 @@ const {
   kruskal,
   forwardStep: kForwardStep,
   backwardStep: kBackwardStep,
+  setStep: kSetStep,
   canBackwardStep: kCanBackwardStep,
   canForwardStep: kCanForwardStep,
 } = useKruskal(graph);
@@ -32,8 +33,10 @@ const {
   prims,
   forwardStep: pForwardStep,
   backwardStep: pBackwardStep,
+  setStep: pSetStep,
   canBackwardStep: pCanBackwardStep,
   canForwardStep: pCanForwardStep,
+
 } = usePrims(graph);
 
 type Algorithm = "kruskal" | "prim" | undefined;
@@ -71,6 +74,11 @@ const stepForwards = () => {
   currentAlgorithm.value === "kruskal" ? kForwardStep() : pForwardStep();
   colorizeGraph();
 };
+
+const setStep = (newStep: number) => {
+  currentAlgorithm.value === "kruskal" ? kSetStep(newStep) : pSetStep(newStep);
+
+}
 
 const computedCanForwardStep = computed(() => {
   return currentAlgorithm.value === "kruskal"
@@ -119,9 +127,9 @@ graph.subscribe("onKeydown", handleStepKeys);
   <div class="w-full h-full relative">
     <Button
       v-if="showSimulation"
-      @click="showSimulation = false"
+      @click="showSimulation = false, runningSimulation = false"
       class="absolute m-3 z-50"
-      >Exit Simulation</Button
+      >Exit {{ algorithms[algorithms.findIndex(a => currentAlgorithm === a.value)].label }} Simulation</Button
     >
     <div v-else class="absolute m-3 flex gap-3 z-50">
       <Button
@@ -159,7 +167,7 @@ graph.subscribe("onKeydown", handleStepKeys);
       v-else-if="currentAlgorithm"
       class="absolute m-3 flex z-50 bottom-2 flex justify-center w-full"
     >
-      <Button @click="showSimulation = true" class="text-3xl"
+      <Button @click="showSimulation = true, setStep(1)" class="text-3xl"
         >Run Simulation</Button
       >
     </div>
