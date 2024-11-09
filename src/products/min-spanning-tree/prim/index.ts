@@ -39,9 +39,9 @@ export const usePrims = (graph: Graph) => {
     }
 
     return mst;
-  };
+  }
 
   return {
     prims,
-  };
-};
+  }
+}
