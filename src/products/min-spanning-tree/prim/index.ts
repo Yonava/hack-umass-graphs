@@ -1,10 +1,9 @@
 import type { Graph, GEdge } from "@graph/types";
 import { clone } from "@utils/clone";
-import { ref } from "vue";
+import { ref, computed } from "vue";
 
 export const usePrims = (graph: Graph) => {
-  const currentStep = ref(2);
-  const mstSteps = ref<GEdge[][]>([]);
+  const currentStep = ref(graph.nodes.value.length - 1);
 
   const getMinEdge = (edges: GEdge[], inMST: Set<string>): GEdge | null => {
     let minEdge: GEdge | null = null;
@@ -34,7 +33,10 @@ export const usePrims = (graph: Graph) => {
 
     const allEdges: GEdge[] = Object.values(clone(graph.edges.value));
 
-    while (mst.length < graph.nodes.value.length - 1) {
+    while (
+      mst.length < graph.nodes.value.length - 1 &&
+      mst.length < currentStep.value
+    ) {
       const minEdge = getMinEdge(allEdges, inMST);
 
       if (!minEdge) {
@@ -42,7 +44,6 @@ export const usePrims = (graph: Graph) => {
       }
 
       mst.push(minEdge);
-      mstSteps.value.push([...mst]);
       inMST.add(minEdge.from);
       inMST.add(minEdge.to);
     }
@@ -50,22 +51,27 @@ export const usePrims = (graph: Graph) => {
     return mst;
   };
 
+  const canBackwardStep = computed(() => {
+    return currentStep.value > 1;
+  });
+
+  const canForwardStep = computed(() => {
+    return currentStep.value < graph.nodes.value.length;
+  });
+
   const forwardStep = () => {
-    if (currentStep.value < mstSteps.value.length - 1) {
-      currentStep.value++;
-    }
+    if (canForwardStep) currentStep.value++;
   };
 
   const backwardStep = () => {
-    if (currentStep.value > 0) {
-      currentStep.value--;
-    }
+    if (canBackwardStep.value) currentStep.value--;
   };
 
   return {
     prims,
     backwardStep,
     forwardStep,
-    currentStep,
+    canBackwardStep,
+    canForwardStep,
   };
 };

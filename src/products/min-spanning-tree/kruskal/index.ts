@@ -1,10 +1,13 @@
 import type { Graph, GEdge } from "@graph/types";
 import { clone } from '@utils/clone'
+import { ref, computed } from 'vue'
 
 type Parent = Map<string, string>
 type Rank = Map<string, number>
 
 export const useKruskal = (graph: Graph) => {
+
+  const currentStep = ref(graph.nodes.value.length - 1)
 
   const find = (parent: Parent, nodeId: string): string => {
     if (parent.get(nodeId) !== nodeId) {
@@ -45,6 +48,7 @@ export const useKruskal = (graph: Graph) => {
 
     const mst: GEdge[] = [];
     for (const edge of sortedEdges) {
+      if (mst.length >= currentStep.value) break;
       const sourceRoot = find(parent, edge.from);
       const targetRoot = find(parent, edge.to);
 
@@ -59,7 +63,28 @@ export const useKruskal = (graph: Graph) => {
     return mst;
   };
 
+
+  const canBackwardStep = computed(() => {
+    return currentStep.value > 1;
+  });
+
+  const canForwardStep = computed(() => {
+    return currentStep.value < graph.nodes.value.length - 1;
+  });
+
+  const forwardStep = () => {
+    if (canForwardStep.value) currentStep.value++;
+  };
+
+  const backwardStep = () => {
+    if (canBackwardStep.value) currentStep.value--;
+  };
+
   return {
     kruskal,
+    backwardStep,
+    forwardStep,
+    canBackwardStep,
+    canForwardStep,
   };
 };

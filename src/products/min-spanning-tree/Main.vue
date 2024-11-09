@@ -19,17 +19,28 @@ const graph = useGraph(graphEl, {
 });
 
 useSetupGraph(graph);
-// , backStep: kBackStep, forwardStep: kForwardsStep
-const { kruskal } = useKruskal(graph);
-const { prims, forwardStep, backwardStep, currentStep } = usePrims(graph);
+const {
+  kruskal,
+  forwardStep: kForwardStep,
+  backwardStep: kBackwardStep,
+  canBackwardStep: kCanBackwardStep,
+  canForwardStep: kCanForwardStep,
+} = useKruskal(graph);
+const {
+  prims,
+  forwardStep: pForwardStep,
+  backwardStep: pBackwardStep,
+  canBackwardStep: pCanBackwardStep,
+  canForwardStep: pCanForwardStep,
+} = usePrims(graph);
 
 type Algorithms = "kruskal" | "prim" | undefined;
 
-const currentAlgorithm = ref<Algorithms>("kruskal");
+const currentAlgorithm = ref<Algorithms>(undefined);
 const algorithms = [
-  { label: 'Kruskal', value: 'kruskal' },
-  { label: 'Prim', value: 'prim' },
-  { label: 'None', value: undefined },
+  { label: "Kruskal", value: "kruskal" },
+  { label: "Prim", value: "prim" },
+  { label: "None", value: undefined },
 ] as const;
 
 const colorizeGraph = () => {
@@ -44,12 +55,18 @@ const colorizeGraph = () => {
 };
 
 const updateAlgorithm = (newAlgorithm: Algorithms) => {
-  currentAlgorithm.value = newAlgorithm
-  colorizeGraph()
-}
+  currentAlgorithm.value = newAlgorithm;
+  colorizeGraph();
+};
 
-const backardprims = () => { backwardStep(); colorizeGraph() }
-const forwar = () => { forwardStep(); colorizeGraph() }
+const stepBackwards = () => {
+  currentAlgorithm.value === 'kruskal' ? kBackwardStep() : pBackwardStep()
+  colorizeGraph();
+};
+const stepForwards = () => {
+  currentAlgorithm.value === 'kruskal' ? kForwardStep() : pForwardStep()
+  colorizeGraph();
+};
 
 graph.subscribe("onStructureChange", colorizeGraph);
 graph.subscribe("onEdgeLabelChange", colorizeGraph);
@@ -58,15 +75,21 @@ graph.subscribe("onEdgeLabelChange", colorizeGraph);
 <template>
   <div class="w-full h-full relative">
     <div class="absolute m-3 flex gap-3 z-50">
-      <Button v-for="(algorithm, index) in algorithms" :key="index" @click="updateAlgorithm(algorithm.value)"
-        :color="currentAlgorithm === algorithm.value ? GREEN_500 : undefined">
+      <Button
+        v-for="(algorithm, index) in algorithms"
+        :key="index"
+        @click="updateAlgorithm(algorithm.value)"
+        :color="currentAlgorithm === algorithm.value ? GREEN_500 : undefined"
+      >
         {{ algorithm.label }}
       </Button>
     </div>
-    <div v-if="currentAlgorithm" class="absolute m-3 flex gap-3 z-50 bottom-2 right-2">
-      <Button class="text-4xl px-4" @click="backardprims">←</Button>
-      <!-- make disabled at end -->
-      <Button class="text-4xl px-4" @click="forwar">→</Button>
+    <div
+      v-if="currentAlgorithm"
+      class="absolute m-3 flex gap-3 z-50 bottom-2 right-2"
+    >
+      <Button class="text-4xl px-4" @click="stepBackwards">←</Button>
+      <Button class="text-4xl px-4" @click="stepForwards">→</Button>
     </div>
     <Graph @graph-ref="(el) => (graphEl = el)" :graph="graph" />
   </div>
