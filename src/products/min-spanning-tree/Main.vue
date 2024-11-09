@@ -92,6 +92,23 @@ const handleStepKeys = (e: KeyboardEvent) => {
 };
 
 const showSimulation = ref(false);
+const runningSimulation = ref(false);
+
+const runSimulation = () => {
+  if (runningSimulation.value) return runningSimulation.value = false;
+  runningSimulation.value = true;
+
+  const runStep = () => {
+    if (computedCanForwardStep.value && runningSimulation.value) {
+      stepForwards();
+      setTimeout(runStep, 500);
+    } else {
+      runningSimulation.value = false;
+    }
+  };
+
+  runStep();
+};
 
 graph.subscribe("onStructureChange", colorizeGraph);
 graph.subscribe("onEdgeLabelChange", colorizeGraph);
@@ -123,14 +140,16 @@ graph.subscribe("onKeydown", handleStepKeys);
       class="absolute m-3 flex gap-3 z-50 bottom-2 w-full justify-center"
     >
       <Button
-        @click="stepBackwards"
+        @click="stepBackwards(), (runningSimulation = false)"
         :color="computedCanBackwardStep ? undefined : colors.SLATE_400"
         class="text-4xl h-24 w-24 rounded-full"
         >◀</Button
       >
-      <Button class="text-4xl h-24 w-24 rounded-full">⏯</Button>
+      <Button @click="runSimulation" class="text-4xl h-24 w-24 rounded-full"
+        >⏯</Button
+      >
       <Button
-        @click="stepForwards"
+        @click="stepForwards(), (runningSimulation = false)"
         :color="computedCanForwardStep ? undefined : colors.SLATE_400"
         class="text-4xl h-24 w-24 rounded-full"
         >▶</Button
