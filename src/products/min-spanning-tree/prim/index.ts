@@ -56,7 +56,7 @@ export const usePrims = (graph: Graph) => {
   });
 
   const canForwardStep = computed(() => {
-    return currentStep.value < graph.nodes.value.length;
+    return currentStep.value < graph.nodes.value.length - 1;
   });
 
   const forwardStep = () => {

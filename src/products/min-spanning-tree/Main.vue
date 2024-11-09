@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useGraph } from "@graph/useGraph";
 import Graph from "@graph/Graph.vue";
 import { useSetupGraph, edgeLabelIsPositiveNumber } from "./useSetupGraph";
@@ -7,7 +7,7 @@ import { useKruskal } from "./kruskal";
 import { usePrims } from "./prim";
 import { useColorizeGraph } from "./useColorizeGraph";
 import Button from "@playground/ui/Button.vue";
-import { GREEN_500 } from "@utils/colors";
+import colors from "@utils/colors";
 
 const graphEl = ref<HTMLCanvasElement>();
 const graph = useGraph(graphEl, {
@@ -68,8 +68,24 @@ const stepForwards = () => {
   colorizeGraph();
 };
 
+const computedCanForwardStep = computed(() => {
+  return currentAlgorithm.value === 'kruskal' ? kCanForwardStep.value : pCanForwardStep.value
+})
+const computedCanBackwardStep = computed(() => {
+  return currentAlgorithm.value === 'kruskal' ? kCanBackwardStep.value : pCanBackwardStep.value
+})
+
+const handleArrowKeys = (e: KeyboardEvent) => {
+  if (e.key === '[' && computedCanBackwardStep.value) {
+    stepBackwards()
+  } else if (e.key === ']' && computedCanForwardStep.value) {
+    stepForwards()
+  }
+}
+
 graph.subscribe("onStructureChange", colorizeGraph);
 graph.subscribe("onEdgeLabelChange", colorizeGraph);
+graph.subscribe("onKeydown", handleArrowKeys)
 </script>
 
 <template>
@@ -79,7 +95,7 @@ graph.subscribe("onEdgeLabelChange", colorizeGraph);
         v-for="(algorithm, index) in algorithms"
         :key="index"
         @click="updateAlgorithm(algorithm.value)"
-        :color="currentAlgorithm === algorithm.value ? GREEN_500 : undefined"
+        :color="currentAlgorithm === algorithm.value ? colors.GREEN_500 : undefined"
       >
         {{ algorithm.label }}
       </Button>
@@ -88,8 +104,16 @@ graph.subscribe("onEdgeLabelChange", colorizeGraph);
       v-if="currentAlgorithm"
       class="absolute m-3 flex gap-3 z-50 bottom-2 right-2"
     >
-      <Button class="text-4xl px-4" @click="stepBackwards">←</Button>
-      <Button class="text-4xl px-4" @click="stepForwards">→</Button>
+      <Button 
+        @click="stepBackwards"
+        :color="computedCanBackwardStep ? undefined : colors.SLATE_400"
+        class="text-4xl px-4" 
+      >←</Button>
+      <Button 
+        @click="stepForwards"
+        :color="computedCanForwardStep ? undefined : colors.SLATE_400"
+        class="text-4xl px-4" 
+      >→</Button>
     </div>
     <Graph @graph-ref="(el) => (graphEl = el)" :graph="graph" />
   </div>
