@@ -3,7 +3,11 @@ import { clone } from "@utils/clone";
 import { ref, computed } from "vue";
 
 export const usePrims = (graph: Graph) => {
+  
   const currentStep = ref(graph.nodes.value.length - 1);
+
+  graph.subscribe('onStructureChange', () => currentStep.value = graph.nodes.value.length - 1)
+
 
   const getMinEdge = (edges: GEdge[], inMST: Set<string>): GEdge | null => {
     let minEdge: GEdge | null = null;

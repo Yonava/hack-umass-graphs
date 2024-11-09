@@ -4,7 +4,10 @@ import { ref, computed } from "vue";
 import type { Parent, Rank } from "./types";
 
 export const useKruskal = (graph: Graph) => {
+
   const currentStep = ref(graph.nodes.value.length - 1);
+  
+  graph.subscribe('onStructureChange', () => currentStep.value = graph.nodes.value.length - 1)
 
   const find = (parent: Parent, nodeId: string): string => {
     if (parent.get(nodeId) !== nodeId) {
