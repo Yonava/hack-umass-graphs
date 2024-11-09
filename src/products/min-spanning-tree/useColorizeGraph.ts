@@ -5,7 +5,6 @@ import type { GEdge, Graph } from "@graph/types";
 
 export const useColorizeGraph = (graph: Graph, mst: GEdge[]) => {
 
-  
   const { setTheme, removeAllThemes } = useTheme(graph, 'mst')
   
   if (mst.length === 0) return removeAllThemes()

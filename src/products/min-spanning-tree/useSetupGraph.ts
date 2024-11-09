@@ -22,5 +22,5 @@ export const useSetupGraph = (graph: Graph) => {
 
 export const edgeLabelIsPositiveNumber = (input: string): string | undefined => {
   const parsedInput = Number(input);
-  return isNaN(parsedInput) || parsedInput < 0 ? undefined : input;
+  return isNaN(parsedInput) || parsedInput < 0 || input === '' ? undefined : input;
 };

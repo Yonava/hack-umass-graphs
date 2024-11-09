@@ -4,7 +4,6 @@ import { clone } from '@utils/clone'
 type Parent = Map<string, string>
 type Rank = Map<string, number>
 
-
 export const useKruskal = (graph: Graph) => {
 
   const find = (parent: Parent, nodeId: string): string => {
