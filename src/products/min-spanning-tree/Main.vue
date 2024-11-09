@@ -19,6 +19,7 @@ const graph = useGraph(graphEl, {
 });
 
 useSetupGraph(graph);
+
 const {
   kruskal,
   forwardStep: kForwardStep,
@@ -26,6 +27,7 @@ const {
   canBackwardStep: kCanBackwardStep,
   canForwardStep: kCanForwardStep,
 } = useKruskal(graph);
+
 const {
   prims,
   forwardStep: pForwardStep,
@@ -37,6 +39,7 @@ const {
 type Algorithms = "kruskal" | "prim" | undefined;
 
 const currentAlgorithm = ref<Algorithms>(undefined);
+
 const algorithms = [
   { label: "Kruskal", value: "kruskal" },
   { label: "Prim", value: "prim" },
@@ -63,6 +66,7 @@ const stepBackwards = () => {
   currentAlgorithm.value === 'kruskal' ? kBackwardStep() : pBackwardStep()
   colorizeGraph();
 };
+
 const stepForwards = () => {
   currentAlgorithm.value === 'kruskal' ? kForwardStep() : pForwardStep()
   colorizeGraph();

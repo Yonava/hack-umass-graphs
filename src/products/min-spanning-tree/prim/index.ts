@@ -26,7 +26,7 @@ export const usePrims = (graph: Graph) => {
     if (graph.nodes.value.length === 0) return [];
 
     const mst: GEdge[] = [];
-    const inMST: Set<string> = new Set();
+    const inMST = new Set<string>();
 
     const startNode = graph.nodes.value[0].id;
     inMST.add(startNode);
