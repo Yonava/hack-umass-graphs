@@ -36,9 +36,9 @@ const {
   canForwardStep: pCanForwardStep,
 } = usePrims(graph);
 
-type Algorithms = "kruskal" | "prim" | undefined;
+type Algorithm = "kruskal" | "prim" | undefined;
 
-const currentAlgorithm = ref<Algorithms>(undefined);
+const currentAlgorithm = ref<Algorithm>(undefined);
 
 const algorithms = [
   { label: "Kruskal", value: "kruskal" },
@@ -57,7 +57,7 @@ const colorizeGraph = () => {
   }
 };
 
-const updateAlgorithm = (newAlgorithm: Algorithms) => {
+const updateAlgorithm = (newAlgorithm: Algorithm) => {
   currentAlgorithm.value = newAlgorithm;
   colorizeGraph();
 };
@@ -79,7 +79,7 @@ const computedCanBackwardStep = computed(() => {
   return currentAlgorithm.value === 'kruskal' ? kCanBackwardStep.value : pCanBackwardStep.value
 })
 
-const handleArrowKeys = (e: KeyboardEvent) => {
+const handleStepKeys = (e: KeyboardEvent) => {
   if (e.key === '[' && computedCanBackwardStep.value) {
     stepBackwards()
   } else if (e.key === ']' && computedCanForwardStep.value) {
@@ -89,7 +89,7 @@ const handleArrowKeys = (e: KeyboardEvent) => {
 
 graph.subscribe("onStructureChange", colorizeGraph);
 graph.subscribe("onEdgeLabelChange", colorizeGraph);
-graph.subscribe("onKeydown", handleArrowKeys)
+graph.subscribe("onKeydown", handleStepKeys)
 </script>
 
 <template>
