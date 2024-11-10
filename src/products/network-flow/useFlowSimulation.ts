@@ -34,7 +34,6 @@ export const useFlowSimulation = (graph: Graph) => {
     graph.settings.value.focusable = false
     simulationActive.value = true
     createResidualEdges()
-    nextStep()
   }
 
   const stopSimulation = () => {
@@ -46,8 +45,14 @@ export const useFlowSimulation = (graph: Graph) => {
   }
 
   const nextStep = () => {
-    if (step.value === tracker.value.length - 1) return
+    if (step.value === tracker.value.length) return
     step.value++
+
+    if (step.value === tracker.value.length) {
+      activeEdgeIds.value = []
+      graph.repaint('flow-simulation/next-step')()
+      return
+    }
 
     const trackerAtStep = tracker.value[step.value]
     activeEdgeIds.value = Object.keys(trackerAtStep)
@@ -63,12 +68,19 @@ export const useFlowSimulation = (graph: Graph) => {
   }
 
   const prevStep = () => {
-    if (step.value === 0) return
+    if (step.value < -1) return
+    step.value--
 
-    const goToStep = step.value - 1
+    if (step.value === -1) {
+      activeEdgeIds.value = []
+      graph.repaint('flow-simulation/prev-step')()
+      return
+    }
+
+    const goToStep = step.value
     stopSimulation()
     startSimulation()
-    for (let i = 0; i < goToStep; i++) nextStep()
+    for (let i = 0; i < goToStep + 1; i++) nextStep()
   }
 
   const colorActiveEdges = (edge: GEdge) => {
