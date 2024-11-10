@@ -2,23 +2,17 @@
   import { ref } from "vue";
   import { useGraph } from "@graph/useGraph";
   import Graph from "@graph/Graph.vue";
-  import Button from "@playground/ui/Button.vue"
-  import { useDijkstraTrace } from "./dijkstras"
-  import { useTheme } from "@graph/themes/useTheme"
-  import { useSimulator } from "./useSimulator.ts"
-import { THEMES } from "@graph/themes";
+  import { useSimulator } from "./useSimulator";
+  import SimulatorControls from "./SimulatorControls.vue";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
     settings: {
       persistentStorageKey: "dijkstras",
     },
-    theme: THEMES.girl
   });
 
-  const { dijkstras } = useDijkstraTrace(graph);
-  const { nextStep, prevStep, traceAtStep } = useSimulator(graph)
-  
+  const simControls = useSimulator(graph);
 </script>
 
 <template>
@@ -29,12 +23,7 @@ import { THEMES } from "@graph/themes";
     />
   </div>
 
-  <div class="absolute top-0 m-3 flex gap-3">
-    <Button @click="prevStep">
-      Prev Step
-    </Button>
-      <Button @click="nextStep">
-        Next Step
-      </Button>
-    </div>
+  <div class="absolute bottom-8 w-full flex justify-center items-center p-3">
+    <SimulatorControls :controls="simControls" />
+  </div>
 </template>
