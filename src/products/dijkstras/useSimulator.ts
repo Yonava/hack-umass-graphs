@@ -4,6 +4,12 @@ import { useDijkstraTrace } from "./dijkstras";
 import { useTheme } from "@graph/themes/useTheme";
 import colors from "@utils/colors";
 
+export const SIM_COLORS = {
+  SOURCE: colors.AMBER_600,
+  EXPLORED: colors.BLUE_500,
+  EXPLORING: colors.CYAN_500,
+} as const
+
 export const useSimulator = (graph: Graph) => {
 
   const { trace } = useDijkstraTrace(graph)
@@ -72,15 +78,16 @@ export const useSimulator = (graph: Graph) => {
     if (!active.value) return
     if (graph.isHighlighted(node.id)) return
 
-    // Source
     if (!traceAtStep.value) return
-    if (traceAtStep.value.source.id === node.id) return colors.AMBER_600
+    if (traceAtStep.value.source.id === node.id) return SIM_COLORS.SOURCE
 
-    // Explored
     if (!exploredNodeAtStep.value) return;
+
     const idsInCurrStep = exploredNodeAtStep.value[step.value]
-    if (idsInCurrStep.has(node.id)) return colors.BLUE_500
-    else if (traceAtStep.value.exploredNodes.map(n => n.id).includes(node.id)) return colors.CYAN_500
+    if (idsInCurrStep.has(node.id)) return SIM_COLORS.EXPLORING
+
+    const hasExplored = exploredNodeAtStep.value.slice(0, step.value).some((ids) => ids.has(node.id))
+    if (hasExplored) return SIM_COLORS.EXPLORED
   }
 
   const nodeDistanceText = (node: GNode) => {

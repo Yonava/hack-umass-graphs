@@ -102,7 +102,6 @@ export const useDijkstraTrace = (graph: Graph) => {
       nodeParentMap: new Map(nodeParentMap),
     });
 
-    console.log(trace);
     return trace;
   };
 

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { GNode, Graph } from '@graph/types';
 import colors from '@colors'
+import { SIM_COLORS } from './useSimulator';
 
 const props = defineProps<{
   graph: Graph;
@@ -17,6 +18,24 @@ const costToColor = (strCost: string) => {
   if (cost < 7) return colors.ORANGE_500
   if (cost < 9) return colors.RED_400
   return colors.RED_600
+}
+
+const isExplored = (node: GNode) => props.graph.getTheme('nodeBorderColor', node) === SIM_COLORS.EXPLORED
+const isExploring = (node: GNode) => props.graph.getTheme('nodeBorderColor', node) === SIM_COLORS.EXPLORING
+const isSource = (node: GNode) => props.graph.getTheme('nodeBorderColor', node) === SIM_COLORS.SOURCE
+
+const exploreStateColor = (node: GNode) => {
+  if (isExplored(node)) return SIM_COLORS.EXPLORED
+  if (isExploring(node)) return SIM_COLORS.EXPLORING
+  if (isSource(node)) return SIM_COLORS.SOURCE
+  return colors.GRAY_800
+}
+
+const exploreStateText = (node: GNode) => {
+  if (isExplored(node)) return 'Explored'
+  if (isExploring(node)) return 'Exploring'
+  if (isSource(node)) return 'Source'
+  return 'Unexplored'
 }
 </script>
 
@@ -38,6 +57,12 @@ const costToColor = (strCost: string) => {
       <span>
         {{ getNodeCosts(node) }}
       </span>
+    </div>
+    <div
+      class="text-lg rounded-lg h-8 w-28 grid place-items-center font-bold"
+      :style="{ backgroundColor: exploreStateColor(node) }"
+    >
+      {{ exploreStateText(node) }}
     </div>
   </div>
 </template>

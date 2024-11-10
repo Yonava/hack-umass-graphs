@@ -55,7 +55,7 @@
 
   <div
     v-if="simControls.active.value"
-    class="absolute p-3 top-[100px] right-0 overflow-auto bg-gray-800 bg-opacity-80 rounded-l-xl"
+    class="absolute p-3 mt-3 top-0 right-0 overflow-auto bg-gray-800 bg-opacity-80 rounded-l-xl"
   >
     <CostDisplay :graph="graph" />
   </div>
