@@ -2,8 +2,17 @@ import type { Graph, GEdge } from "@graph/types";
 import { clone } from "@utils/clone";
 import { ref, computed } from "vue";
 import type { Parent, Rank } from "./types";
+import type { TutorialStep } from "@graph/tutorials/types";
 
 export const useKruskal = (graph: Graph) => {
+
+  const tutorialSteps: TutorialStep[] = []
+  const addTutorialStep = (edgeWeight: string) => {
+    tutorialSteps.push({
+      hint: `Edge ${edgeWeight} was chosen next because it has the lowest edge weight not connecting connected nodes.`,
+      dismiss: 'onInterval'
+    })
+  }
 
   const maxSteps = graph.nodes.value.length - 1
 
@@ -57,6 +66,7 @@ export const useKruskal = (graph: Graph) => {
       const targetRoot = find(parent, edge.to);
 
       if (sourceRoot !== targetRoot) {
+        addTutorialStep(edge.label)
         mst.push(edge);
         union(parent, rank, sourceRoot, targetRoot);
 

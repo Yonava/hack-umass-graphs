@@ -1,8 +1,16 @@
+import type { TutorialStep } from "@graph/tutorials/types";
 import type { Graph, GEdge } from "@graph/types";
 import { clone } from "@utils/clone";
 import { ref, computed } from "vue";
-
 export const usePrims = (graph: Graph) => {
+
+  const tutorialSteps: TutorialStep[] = []
+  const addTutorialStep = (edgeWeight: string) => {
+    tutorialSteps.push({
+      hint: `Edge ${edgeWeight} was chosen next because it has the lowest connected edge weight.`,
+      dismiss: 'onInterval'
+    })
+  }
 
   const maxSteps = graph.nodes.value.length - 1
 
@@ -25,6 +33,7 @@ export const usePrims = (graph: Graph) => {
       }
     }
 
+    if (minEdge) addTutorialStep(minEdge.label)
     return minEdge;
   };
 
