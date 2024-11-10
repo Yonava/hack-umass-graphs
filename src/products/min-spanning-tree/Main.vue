@@ -8,11 +8,11 @@ import colors from "@utils/colors";
 import { useState } from "./useState";
 import CollabControls from "@playground/graph/CollabControls.vue";
 import Progressbar from "./progressbar/Progressbar.vue";
-import { 
-  mdiPlay, 
-  mdiPause, 
-  mdiChevronLeft, 
-  mdiChevronRight 
+import {
+  mdiPlay,
+  mdiPause,
+  mdiChevronLeft,
+  mdiChevronRight
 } from "@mdi/js";
 
 const graphEl = ref<HTMLCanvasElement>();
@@ -148,21 +148,22 @@ const btnHeight = 24;
     </div>
     <div
       v-else-if="currentAlgorithm"
-      class="absolute m-3 flex z-50 bottom-2 flex justify-center w-full"
+      class="absolute m-3 flex z-50 bottom-16 flex justify-center w-full"
     >
       <Button
         @click="clickRunSimulation"
-        class="text-3xl mb-4 shadow-md"
-        style="padding: 20px 40px 20px 40px"
-        :color="colors.BLUE_700"
-        :text-color="colors.WHITE"
+        class="text-3xl mb-4 shadow-2xl"
+        style="padding: 15px 100px 15px 100px; border-radius: 50px"
       >
         Run Simulation
       </Button>
     </div>
     <Graph @graph-ref="(el) => (graphEl = el)" :graph="graph" />
 
-    <div class="absolute right-0 p-3 h-14 flex gap-3 bottom-0">
+    <div
+      v-if="!showSimulation"
+      class="absolute right-0 p-3 h-14 flex gap-3 bottom-0"
+    >
       <CollabControls :graph="graph" />
     </div>
   </div>
