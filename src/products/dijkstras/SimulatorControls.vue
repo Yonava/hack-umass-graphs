@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import type { DijkstraSimulatorControls } from "./useSimulator";
+  import colors from "@utils/colors";
+import type { DijkstraSimulatorControls } from "./useSimulator";
   import {
     mdiPlay,
     mdiPause,
@@ -7,6 +8,7 @@
     mdiChevronLeft,
     mdiChevronRight,
   } from "@mdi/js";
+  import Button from "@playground/ui/Button.vue";
 
 
   const props = defineProps<{
@@ -38,7 +40,7 @@
 <template>
   <div
     v-if="props.controls.active.value"
-    class="flex gap-[60px]"
+    class="flex gap-[60px] text-white"
   >
     <Button
       @click="prevStep"
