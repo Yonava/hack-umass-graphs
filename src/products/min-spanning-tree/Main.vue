@@ -84,7 +84,7 @@ graph.subscribe("onKeydown", handleStepKeys);
       v-else-if="currentAlgorithm"
       class="absolute m-3 flex z-50 bottom-2 flex justify-center w-full"
     >
-      <Button @click="showSimulation = true, setStep(1)" class="text-3xl"
+      <Button @click="setStep(1), showSimulation = true, stepBackwards()" class="text-3xl"
         >Run Simulation</Button
       >
     </div>
