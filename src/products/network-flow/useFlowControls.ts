@@ -53,7 +53,7 @@ export const useFlowControls = (graph: Graph) => {
     makingSource.value = true;
     const node = await captureNode();
     graph.nodes.value.forEach(node => {
-      if (node.id === SOURCE_LABEL) node.label = getNewLabel();
+      if (node.label === SOURCE_LABEL) node.label = getNewLabel();
     });
     node.label = SOURCE_LABEL;
     graph.trackGraphState();

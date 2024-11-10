@@ -3,7 +3,7 @@
   import Button from "@playground/ui/Button.vue";
 
   const props = defineProps<{
-    simControls: FlowSimulationControls
+    simControls: FlowSimulationControls;
   }>();
 </script>
 
@@ -12,7 +12,7 @@
     v-if="props.simControls.simulationActive.value"
     class="flex gap-3"
   >
-    <Button @click="props.simControls.nextStep">Next Step</Button>
     <Button @click="props.simControls.prevStep">Prev Step</Button>
+    <Button @click="props.simControls.nextStep">Next Step</Button>
   </div>
 </template>

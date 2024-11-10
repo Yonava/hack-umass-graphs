@@ -13,37 +13,64 @@
 <template>
   <div class="flex gap-3">
     <Button
-      v-if="!controls.makingSource.value"
-      @click="controls.makeSource"
-    >
-      Make Source
-    </Button>
-
-    <Button
-      v-else
+      v-if="!simControls.simulationActive.value"
       :style="{
-        backgroundColor: colors.RED_500,
+        backgroundColor: colors.BLUE_600,
         color: colors.WHITE,
       }"
+      @click="simControls.startSimulation"
     >
-      Cancel
+      Run Flow Simulation
     </Button>
 
     <Button
-      v-if="!controls.makingSink.value"
-      @click="controls.makeSink"
-    >
-      Make Sink
-    </Button>
-
-    <Button
-      v-else
+      v-else="!simControls.simulationActive.value"
       :style="{
-        backgroundColor: colors.RED_500,
+        backgroundColor: colors.RED_600,
         color: colors.WHITE,
       }"
+      @click="simControls.stopSimulation"
     >
-      Cancel
+      Stop Simulation
     </Button>
+
+    <div
+      v-if="!props.simControls.simulationActive.value"
+      class="flex gap-3"
+    >
+      <Button
+        v-if="!controls.makingSource.value"
+        @click="controls.makeSource"
+      >
+        Switch Source
+      </Button>
+
+      <Button
+        v-else
+        :style="{
+          backgroundColor: colors.RED_500,
+          color: colors.WHITE,
+        }"
+      >
+        Cancel
+      </Button>
+
+      <Button
+        v-if="!controls.makingSink.value"
+        @click="controls.makeSink"
+      >
+        Switch Sink
+      </Button>
+
+      <Button
+        v-else
+        :style="{
+          backgroundColor: colors.RED_500,
+          color: colors.WHITE,
+        }"
+      >
+        Cancel
+      </Button>
+    </div>
   </div>
 </template>
