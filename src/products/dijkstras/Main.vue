@@ -5,6 +5,7 @@
   import { useSimulator } from "./useSimulator";
   import SimulatorControls from "./SimulatorControls.vue";
   import Button from "@playground/ui/Button.vue";
+  import CostDisplay from "./CostDisplay.vue";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
@@ -12,6 +13,18 @@
       persistentStorageKey: "dijkstras",
     },
   });
+
+  const getNewLabel = () => {
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const labels = graph.nodes.value.map((node) => node.label);
+    let label = 0;
+    while (labels.includes(alphabet[label])) label++;
+    return alphabet[label];
+  };
+
+  graph.subscribe('onNodeAdded', (node) => {
+    node.label = getNewLabel();
+  })
 
   const simControls = useSimulator(graph);
 </script>
@@ -38,6 +51,13 @@
     >
       Stop Simulation
     </Button>
+  </div>
+
+  <div
+    v-if="simControls.active.value"
+    class="absolute p-3 top-[100px] right-0 overflow-auto bg-gray-800 bg-opacity-80 rounded-l-xl"
+  >
+    <CostDisplay :graph="graph" />
   </div>
 
   <div class="absolute bottom-8 w-full flex justify-center items-center p-3">

@@ -42,11 +42,15 @@ export const useSimulator = (graph: Graph) => {
       if (isOver.value || paused.value) return
       nextStep()
     }, 1500)
+
+    graph.repaint('dijkstras/start')()
   }
 
   const stop = () => {
     if (interval.value) clearInterval(interval.value)
     active.value = false
+
+    graph.repaint('dijkstras/stop')()
   }
 
   const nextStep = () => {
@@ -65,6 +69,7 @@ export const useSimulator = (graph: Graph) => {
   }
 
   const colorBorders = (node: GNode) => {
+    if (!active.value) return
     if (graph.isHighlighted(node.id)) return
 
     // Source
@@ -79,6 +84,7 @@ export const useSimulator = (graph: Graph) => {
   }
 
   const nodeDistanceText = (node: GNode) => {
+    if (!active.value) return
     if (!traceAtStep.value) return
     const { distances } = traceAtStep.value
     const nodeDist = distances.find((dist) => dist.id === node.id)
