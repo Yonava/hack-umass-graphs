@@ -20,10 +20,10 @@ export const useResidualEdges = (graph: Graph) => {
     }
 
     graph.edges.value = graph.edges.value.filter((e) => !e.id.startsWith(RESIDUAL_ID))
-    graph.repaint('edge-label-change')()
   }
 
   const createResidualEdges = () => {
+    console.log('creating residual edges')
     const residualsAlreadyExist = graph.edges.value.some((e) => e.id.startsWith(RESIDUAL_ID))
     if (residualsAlreadyExist) return
 
@@ -36,7 +36,6 @@ export const useResidualEdges = (graph: Graph) => {
     }))
 
     graph.edges.value.push(...residualEdges)
-    graph.repaint('edge-label-change')()
   }
 
   return {

@@ -9,7 +9,8 @@
   import { FLOW_GRAPH_SETTINGS } from "./settings";
   import { useFlowProperties } from "./useFlowProperties";
   import Button from "@playground/ui/Button.vue";
-import { useResidualEdges } from "./useResidualEdges";
+  import { useResidualEdges } from "./useResidualEdges";
+  import { useFlowSimulation } from "./useFlowSimulation";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
@@ -20,6 +21,13 @@ import { useResidualEdges } from "./useResidualEdges";
   const controls = useFlowControls(graph);
   const { maxFlow } = useFlowProperties(graph);
   const { createResidualEdges, cleanupResidualEdges } = useResidualEdges(graph);
+  const {
+    startSimulation,
+    stopSimulation,
+    nextStep,
+    prevStep,
+    simulationActive,
+  } = useFlowSimulation(graph);
 </script>
 
 <template>
@@ -37,8 +45,29 @@ import { useResidualEdges } from "./useResidualEdges";
 
     <div class="absolute top-0 right-0 p-3 text-white flex gap-3">
       <span class="font-bold text-xl">Max Flow: {{ maxFlow ?? "N/A" }}</span>
-      <Button @click="cleanupResidualEdges">Cleanup Residuals</Button>
-      <Button @click="createResidualEdges">Create Residuals</Button>
+      <!-- <Button @click="cleanupResidualEdges">Cleanup Residuals</Button>
+      <Button @click="createResidualEdges">Create Residuals</Button> -->
+
+      <Button
+        v-if="!simulationActive"
+        @click="startSimulation"
+      >
+        Start Sim
+      </Button>
+      <Button
+        v-else
+        @click="stopSimulation"
+      >
+        Stop Sim
+      </Button>
+
+      <div
+        v-if="simulationActive"
+        class="flex gap-3"
+      >
+        <Button @click="nextStep">Next Step</Button>
+        <Button @click="prevStep">Prev Step</Button>
+      </div>
     </div>
   </div>
 </template>

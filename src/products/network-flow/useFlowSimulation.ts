@@ -29,7 +29,7 @@ export const useFlowSimulation = (graph: Graph) => {
   }
 
   const startSimulation = () => {
-    step.value = 0
+    step.value = -1
     graph.settings.value.userEditable = false
     graph.settings.value.focusable = false
     simulationActive.value = true
@@ -46,6 +46,7 @@ export const useFlowSimulation = (graph: Graph) => {
 
   const nextStep = () => {
     if (step.value === tracker.value.length - 1) return
+    step.value++
 
     const trackerAtStep = tracker.value[step.value]
     activeEdgeIds.value = Object.keys(trackerAtStep)
@@ -57,11 +58,24 @@ export const useFlowSimulation = (graph: Graph) => {
     edge1.label = trackerAtStep[edge1Id].toString()
     edge2.label = trackerAtStep[edge2Id].toString()
 
-    step.value++
+    graph.repaint('flow-simulation/next-step')()
   }
 
   const prevStep = () => {
     if (step.value === 0) return
+    step.value--
+
+    const trackerAtStep = tracker.value[step.value]
+    activeEdgeIds.value = Object.keys(trackerAtStep)
+    const [edge1Id, edge2Id] = activeEdgeIds.value
+    const edge1 = graph.getEdge(edge1Id)
+    const edge2 = graph.getEdge(edge2Id)
+
+    if (!edge1 || !edge2) throw 'this is all wrong!'
+    edge1.label = trackerAtStep[edge1Id].toString()
+    edge2.label = trackerAtStep[edge2Id].toString()
+
+    graph.repaint('flow-simulation/prev-step')()
   }
 
   const colorActiveEdges = (edge: GEdge) => {
