@@ -40,7 +40,7 @@
       <NetworkFlowStats :graph="graph" />
     </div>
 
-    <div class="absolute bottom-0 p-3">
+    <div class="absolute bottom-8 w-full flex justify-center items-center p-3">
       <NetworkFlowSim :sim-controls="simulationControls" />
     </div>
   </div>

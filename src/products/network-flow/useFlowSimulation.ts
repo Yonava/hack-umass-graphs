@@ -1,7 +1,7 @@
 import type { GEdge, Graph } from "@graph/types"
 import { fordFulkerson } from "./fordFulkerson"
 import { SINK_LABEL, SOURCE_LABEL } from "./useFlowControls"
-import { ref } from "vue"
+import { computed, ref } from "vue"
 import { useTheme } from "@graph/themes/useTheme"
 import colors from "@utils/colors"
 import { getValue } from "@graph/helpers"
@@ -17,6 +17,11 @@ export const useFlowSimulation = (graph: Graph) => {
   const activeEdgeIds = ref<string[]>([])
   const step = ref(0)
   const tracker = ref<Record<string, number>[]>([])
+  const simulationInterval = ref<NodeJS.Timeout | null>(null)
+  const simulationPaused = ref(false)
+
+  const isSimulationOver = computed(() => step.value === tracker.value.length)
+  const hasSimulationBegun = computed(() => step.value > -1)
 
   const refreshTrace = async () => {
     createResidualEdges()
@@ -28,12 +33,21 @@ export const useFlowSimulation = (graph: Graph) => {
     cleanupResidualEdges()
   }
 
+  const onSimulationInterval = () => {
+    if (simulationPaused.value || isSimulationOver.value) return
+    nextStep()
+  }
+
   const startSimulation = () => {
     step.value = -1
     graph.settings.value.userEditable = false
     graph.settings.value.focusable = false
     simulationActive.value = true
+    simulationPaused.value = false
     createResidualEdges()
+
+    simulationInterval.value = setInterval(onSimulationInterval, 1_500)
+    graph.repaint('flow-simulation/start-simulation')()
   }
 
   const stopSimulation = () => {
@@ -42,6 +56,9 @@ export const useFlowSimulation = (graph: Graph) => {
     graph.settings.value.focusable = true
     activeEdgeIds.value = []
     simulationActive.value = false
+
+    if (simulationInterval.value) clearInterval(simulationInterval.value)
+    graph.repaint('flow-simulation/stop-simulation')()
   }
 
   const nextStep = () => {
@@ -100,6 +117,13 @@ export const useFlowSimulation = (graph: Graph) => {
     startSimulation,
     stopSimulation,
     simulationActive,
+    activeEdgeIds,
+    step,
+
+    isSimulationOver,
+    hasSimulationBegun,
+
+    simulationPaused,
   }
 }
 
