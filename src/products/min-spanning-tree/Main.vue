@@ -7,7 +7,7 @@ import Button from "@playground/ui/Button.vue";
 import colors from "@utils/colors";
 import { useState } from "./useState";
 import CollabControls from "@playground/graph/CollabControls.vue";
-import Progressbar from "./Progressbar.vue";
+import Progressbar from "./progressbar/Progressbar.vue";
 
 const graphEl = ref<HTMLCanvasElement>();
 const graph = useGraph(graphEl, {
@@ -66,7 +66,10 @@ const clickRunSimulation = () => {
         :key="index"
         @click="updateAlgorithm(algorithm.value)"
         :color="
-          currentAlgorithm === algorithm.value ? colors.GREEN_500 : undefined
+          currentAlgorithm === algorithm.value ? colors.GREEN_600 : undefined
+        "
+        :text-color="
+          currentAlgorithm === algorithm.value ? colors.WHITE : undefined
         "
       >
         {{ algorithm.label }}
@@ -121,7 +124,7 @@ const clickRunSimulation = () => {
     >
       <Button
         @click="clickRunSimulation"
-        class="text-3xl"
+        class="text-3xl mb-4"
       >
         Run Simulation
       </Button>
