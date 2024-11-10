@@ -69,33 +69,43 @@ graph.subscribe("onKeydown", handleStepKeys);
       v-if="currentAlgorithm && showSimulation"
       class="absolute m-3 flex z-50 bottom-2 w-full justify-center items-end"
     >
-    <div class="flex flex-col text-center text-white items-center">
-      <div class="w-96 flex flex-wrap justify-center">
-        <Progressbar :start-progress="0" :current-progress="computedCurrentStep" :end-progress="computedMaxSteps" :theme="{
-          progressColor: colors.GREEN_400,
-          borderRadius: 20,
-        }" />
-          <p class="mb-2 text-white">{{ computedCurrentStep }} / {{ computedMaxSteps }}</p>
+      <div class="flex flex-col items-center">
+        <div class="w-96">
+          <Progressbar
+            :start-progress="0"
+            :current-progress="computedCurrentStep"
+            :end-progress="computedMaxSteps"
+            :theme="{
+              progressColor: colors.GREEN_400,
+              borderRadius: 20,
+            }"
+          />
+          <p class="mb-2 text-white text-center">
+            {{ computedCurrentStep }} / {{ computedMaxSteps }}
+          </p>
         </div>
-       <div class="flex gap-3">
-         <Button
-           @click="stepBackwards(), (runningSimulation = false)"
-           :color="computedCanBackwardStep ? undefined : colors.SLATE_400"
-           class="text-4xl h-24 w-24 rounded-full"
-         >
-           ◀
-         </Button>
-         <Button @click="runSimulation" class="text-4xl h-24 w-24 rounded-full">
-           ⏯
-         </Button>
-         <Button
-           @click="stepForwards(), (runningSimulation = false)"
-           :color="computedCanForwardStep ? undefined : colors.SLATE_400"
-           class="text-4xl h-24 w-24 rounded-full"
-         >
-           ▶
-         </Button>
-       </div>
+        <div class="flex gap-3">
+          <Button
+            @click="stepBackwards(), (runningSimulation = false)"
+            :color="computedCanBackwardStep ? undefined : colors.SLATE_400"
+            class="text-4xl h-24 w-24 rounded-full"
+          >
+            ◀
+          </Button>
+          <Button
+            @click="runSimulation"
+            class="text-4xl h-24 w-24 rounded-full"
+          >
+            ⏯
+          </Button>
+          <Button
+            @click="stepForwards(), (runningSimulation = false)"
+            :color="computedCanForwardStep ? undefined : colors.SLATE_400"
+            class="text-4xl h-24 w-24 rounded-full"
+          >
+            ▶
+          </Button>
+        </div>
       </div>
     </div>
     <div
