@@ -23,7 +23,6 @@ export const useResidualEdges = (graph: Graph) => {
   }
 
   const createResidualEdges = () => {
-    console.log('creating residual edges')
     const residualsAlreadyExist = graph.edges.value.some((e) => e.id.startsWith(RESIDUAL_ID))
     if (residualsAlreadyExist) return
 

@@ -3,13 +3,11 @@
   import { useGraph } from "@graph/useGraph";
   import Graph from "@graph/Graph.vue";
   import { useFlowControls } from "./useFlowControls";
-  import colors from "@utils/colors";
   import SourceSinkControls from "./SourceSinkControls.vue";
   import { useEdgeThickener } from "./useEdgeThickener";
   import { FLOW_GRAPH_SETTINGS } from "./settings";
-  import { useFlowProperties } from "./useFlowProperties";
-  import Button from "@playground/ui/Button.vue";
-  import { useResidualEdges } from "./useResidualEdges";
+  import NetworkFlowStats from "./NetworkFlowStats.vue";
+  import NetworkFlowSim from "./NetworkFlowSim.vue";
   import { useFlowSimulation } from "./useFlowSimulation";
 
   const graphEl = ref<HTMLCanvasElement>();
@@ -19,15 +17,7 @@
 
   useEdgeThickener(graph);
   const controls = useFlowControls(graph);
-  const { maxFlow } = useFlowProperties(graph);
-  const { createResidualEdges, cleanupResidualEdges } = useResidualEdges(graph);
-  const {
-    startSimulation,
-    stopSimulation,
-    nextStep,
-    prevStep,
-    simulationActive,
-  } = useFlowSimulation(graph);
+  const simulationControls = useFlowSimulation(graph);
 </script>
 
 <template>
@@ -40,34 +30,18 @@
     </div>
 
     <div class="absolute top-0 p-3">
-      <SourceSinkControls :controls="controls" />
+      <SourceSinkControls
+        :controls="controls"
+        :sim-controls="simulationControls"
+      />
     </div>
 
     <div class="absolute top-0 right-0 p-3 text-white flex gap-3">
-      <span class="font-bold text-xl">Max Flow: {{ maxFlow ?? "N/A" }}</span>
-      <!-- <Button @click="cleanupResidualEdges">Cleanup Residuals</Button>
-      <Button @click="createResidualEdges">Create Residuals</Button> -->
+      <NetworkFlowStats :graph="graph" />
+    </div>
 
-      <Button
-        v-if="!simulationActive"
-        @click="startSimulation"
-      >
-        Start Sim
-      </Button>
-      <Button
-        v-else
-        @click="stopSimulation"
-      >
-        Stop Sim
-      </Button>
-
-      <div
-        v-if="simulationActive"
-        class="flex gap-3"
-      >
-        <Button @click="nextStep">Next Step</Button>
-        <Button @click="prevStep">Prev Step</Button>
-      </div>
+    <div class="absolute bottom-0 p-3">
+      <NetworkFlowSim :sim-controls="simulationControls" />
     </div>
   </div>
 </template>

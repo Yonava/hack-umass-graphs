@@ -5,7 +5,7 @@ import { ref } from "vue"
 import { useTheme } from "@graph/themes/useTheme"
 import colors from "@utils/colors"
 import { getValue } from "@graph/helpers"
-import { useResidualEdges } from "./useResidualEdges"
+import { RESIDUAL_ID, useResidualEdges } from "./useResidualEdges"
 
 export const useFlowSimulation = (graph: Graph) => {
 
@@ -41,6 +41,7 @@ export const useFlowSimulation = (graph: Graph) => {
     cleanupResidualEdges()
     graph.settings.value.userEditable = true
     graph.settings.value.focusable = true
+    activeEdgeIds.value = []
     simulationActive.value = false
   }
 
@@ -63,25 +64,17 @@ export const useFlowSimulation = (graph: Graph) => {
 
   const prevStep = () => {
     if (step.value === 0) return
-    step.value--
 
-    const trackerAtStep = tracker.value[step.value]
-    activeEdgeIds.value = Object.keys(trackerAtStep)
-    const [edge1Id, edge2Id] = activeEdgeIds.value
-    const edge1 = graph.getEdge(edge1Id)
-    const edge2 = graph.getEdge(edge2Id)
-
-    if (!edge1 || !edge2) throw 'this is all wrong!'
-    edge1.label = trackerAtStep[edge1Id].toString()
-    edge2.label = trackerAtStep[edge2Id].toString()
-
-    graph.repaint('flow-simulation/prev-step')()
+    const goToStep = step.value - 1
+    stopSimulation()
+    startSimulation()
+    for (let i = 0; i < goToStep; i++) nextStep()
   }
 
   const colorActiveEdges = (edge: GEdge) => {
     const isActive = activeEdgeIds.value.includes(edge.id)
     if (isActive) return getValue(graph.theme.value.edgeFocusColor, edge)
-    else if (edge.id.startsWith('residual')) return colors.ORANGE_400
+    else if (edge.id.startsWith(RESIDUAL_ID)) return colors.ORANGE_400
   }
 
   setTheme('edgeColor', colorActiveEdges)
@@ -97,3 +90,5 @@ export const useFlowSimulation = (graph: Graph) => {
     simulationActive,
   }
 }
+
+export type FlowSimulationControls = ReturnType<typeof useFlowSimulation>
