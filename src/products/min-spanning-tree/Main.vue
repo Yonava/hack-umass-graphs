@@ -42,6 +42,13 @@ const {
 graph.subscribe("onStructureChange", colorizeGraph);
 graph.subscribe("onEdgeLabelChange", colorizeGraph);
 graph.subscribe("onKeydown", handleStepKeys);
+
+const clickRunSimulation = () => {
+  setStep(1)
+  showSimulation.value = true 
+  runSimulation()
+  stepBackwards()
+}
 </script>
 
 <template>
@@ -113,7 +120,7 @@ graph.subscribe("onKeydown", handleStepKeys);
       class="absolute m-3 flex z-50 bottom-2 flex justify-center w-full"
     >
       <Button
-        @click="setStep(1), (showSimulation = true), stepBackwards()"
+        @click="clickRunSimulation"
         class="text-3xl"
       >
         Run Simulation
