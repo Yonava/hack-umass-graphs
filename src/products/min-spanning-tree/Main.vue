@@ -8,6 +8,13 @@ import colors from "@utils/colors";
 import { useState } from "./useState";
 import CollabControls from "@playground/graph/CollabControls.vue";
 import Progressbar from "./progressbar/Progressbar.vue";
+import {
+  mdiPlay,
+  mdiPause,
+  mdiChevronLeft,
+  mdiChevronRight,
+} from "@mdi/js";
+
 
 const graphEl = ref<HTMLCanvasElement>();
 const graph = useGraph(graphEl, {
@@ -49,6 +56,8 @@ const clickRunSimulation = () => {
   runSimulation()
   stepBackwards()
 }
+
+const btnHeight = 24
 </script>
 
 <template>
@@ -93,26 +102,45 @@ const clickRunSimulation = () => {
             class="border-gray-200 border-2"
           />
         </div>
-        <div class="flex gap-3">
+        <div class="flex gap-16 m-6">
           <Button
             @click="stepBackwards(), (runningSimulation = false)"
-            :color="computedCanBackwardStep ? undefined : colors.SLATE_400"
-            class="text-4xl h-24 w-24 rounded-full"
+            style="border-radius: 100px; transform: scale(2)"
           >
-            ◀
+            <svg
+              :width="btnHeight"
+              :height="btnHeight + 8"
+              :viewBox="`0 0 ${btnHeight} ${btnHeight}`"
+            >
+              <path :d="mdiChevronLeft" />
+            </svg>
           </Button>
           <Button
+            style="border-radius: 100px; transform: scale(2)"
             @click="runSimulation"
-            class="text-4xl h-24 w-24 rounded-full"
           >
-            ⏯
+            <svg
+              :width="btnHeight"
+              :height="btnHeight + 8"
+              :viewBox="`0 0 ${btnHeight} ${btnHeight}`"
+            >
+              <path
+                :d="runningSimulation ? mdiPause : mdiPlay"
+              />
+            </svg>
           </Button>
           <Button
+            style="border-radius: 100px; transform: scale(2); padding-left: 10px;"
             @click="stepForwards(), (runningSimulation = false)"
             :color="computedCanForwardStep ? undefined : colors.SLATE_400"
-            class="text-4xl h-24 w-24 rounded-full"
           >
-            ▶
+            <svg
+              :width="btnHeight - 2"
+              :height="btnHeight + 8"
+              :viewBox="`0 0 ${btnHeight-1} ${btnHeight-1}`"
+            >
+              <path :d="mdiChevronRight" />
+            </svg>
           </Button>
         </div>
       </div>
