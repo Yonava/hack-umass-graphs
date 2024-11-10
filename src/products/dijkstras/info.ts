@@ -11,7 +11,7 @@ const info: ProductInfo = {
   menu: {
     name: 'Dijkstras Algorithm',
     description: 'Visualize Dijkstras Algorithm',
-    thumbnail: '/products/thumbnails/graph-playground.png',
+    thumbnail: '/products/thumbnails/dijkstras.png',
   },
 }
 

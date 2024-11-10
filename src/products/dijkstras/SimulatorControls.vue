@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import type { FlowSimulationControls } from "./useFlowSimulation";
-  import Button from "@playground/ui/Button.vue";
+  import colors from "@utils/colors";
+import type { DijkstraSimulatorControls } from "./useSimulator";
   import {
     mdiPlay,
     mdiPause,
@@ -8,29 +8,30 @@
     mdiChevronLeft,
     mdiChevronRight,
   } from "@mdi/js";
+  import Button from "@playground/ui/Button.vue";
+
 
   const props = defineProps<{
-    simControls: FlowSimulationControls;
+    controls: DijkstraSimulatorControls;
   }>();
 
-  const nextStep = () => {
-    props.simControls.nextStep();
-    props.simControls.simulationPaused.value = true;
+  const prevStep = () => {
+    props.controls.prevStep();
+    props.controls.paused.value = true;
   };
 
-  const prevStep = () => {
-    props.simControls.prevStep();
-    props.simControls.simulationPaused.value = true;
+  const nextStep = () => {
+    props.controls.nextStep();
+    props.controls.paused.value = true;
   };
 
   const togglePause = () => {
-    props.simControls.simulationPaused.value =
-      !props.simControls.simulationPaused.value;
+    props.controls.paused.value = !props.controls.paused.value;
   };
 
   const restart = () => {
-    props.simControls.stopSimulation();
-    props.simControls.startSimulation();
+    props.controls.stop();
+    props.controls.start();
   };
 
   const btnSize = 24;
@@ -38,8 +39,8 @@
 
 <template>
   <div
-    v-if="props.simControls.simulationActive.value"
-    class="flex gap-[60px]"
+    v-if="props.controls.active.value"
+    class="flex gap-[60px] text-white"
   >
     <Button
       @click="prevStep"
@@ -56,7 +57,7 @@
 
     <Button
       style="border-radius: 100px; transform: scale(2)"
-      v-if="!props.simControls.isSimulationOver.value"
+      v-if="!props.controls.isOver.value"
       @click="togglePause"
     >
       <svg
@@ -65,7 +66,7 @@
         :viewBox="`0 0 ${btnSize} ${btnSize}`"
       >
         <path
-          :d="props.simControls.simulationPaused.value ? mdiPlay : mdiPause"
+          :d="props.controls.paused.value ? mdiPlay : mdiPause"
         />
       </svg>
     </Button>

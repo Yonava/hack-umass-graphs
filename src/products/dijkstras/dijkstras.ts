@@ -18,12 +18,9 @@ export const useDijkstraTrace = (graph: Graph) => {
         } satisfies NodeDistance)
     );
 
-    // assigns source to node with lowest label value (in case doesn't start at node "1")
-    const sourceId = graph.nodes.value.reduce(
-      (acc, cur) => (cur.label === "1" ? cur.id : acc),
-      ""
-    );
+    const sourceId = graph.nodes.value.find(n => n.label === "A")?.id;
     if (!sourceId) throw new Error("Bro wth, there's no sourceId");
+
     // assign distance 0 to source
     distanceArr.filter((n) => n.id === sourceId)[0].distance = 0;
 
@@ -105,13 +102,16 @@ export const useDijkstraTrace = (graph: Graph) => {
       nodeParentMap: new Map(nodeParentMap),
     });
 
-    console.log(trace);
     return trace;
   };
 
-  graph.subscribe("onStructureChange", () => {
+  const refreshTrace = () => {
     trace.value = dijkstras();
-  });
+  }
+
+  graph.subscribe("onStructureChange", refreshTrace);
+  graph.subscribe("onEdgeLabelChange", refreshTrace);
+  graph.subscribe("onGraphReset", refreshTrace);
 
   return { trace, dijkstras };
 };
