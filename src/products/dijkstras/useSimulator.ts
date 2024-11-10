@@ -53,6 +53,7 @@ export const useSimulator = (graph: Graph) => {
         if (!exploredNodeAtStep.value) return;
         const idsInCurrStep = exploredNodeAtStep.value[step.value]
         if (idsInCurrStep.has(node.id)) return colors.BLUE_500
+        else if (traceAtStep.value.exploredNodes.map(n => n.id).includes(node.id)) return colors.CYAN_500
         else return colors.GRAY_500
     }
 
