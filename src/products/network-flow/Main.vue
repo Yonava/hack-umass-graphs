@@ -9,7 +9,7 @@
   import NetworkFlowStats from "./NetworkFlowStats.vue";
   import NetworkFlowSim from "./NetworkFlowSim.vue";
   import { useFlowSimulation } from "./useFlowSimulation";
-import CollabControls from "@playground/graph/CollabControls.vue";
+  import CollabControls from "@playground/graph/CollabControls.vue";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
