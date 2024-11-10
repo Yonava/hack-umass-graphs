@@ -73,7 +73,7 @@ graph.subscribe("onKeydown", handleStepKeys);
         >◀</Button
       >
       <div class="flex flex-col text-center text-white">
-        <p>
+        <p class="mb-2">
           {{ computedCurrentStep }} / {{ computedMaxSteps }}
         </p>
         <Button @click="runSimulation" class="text-4xl h-24 w-24 rounded-full"
