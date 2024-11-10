@@ -1,46 +1,47 @@
 <script setup lang="ts">
-  import { ref, computed } from "vue";
-  import { useGraph } from "@graph/useGraph";
-  import Graph from "@graph/Graph.vue";
-  import { useSetupGraph, edgeLabelIsPositiveNumber } from "./useSetupGraph";
-  import Button from "@playground/ui/Button.vue";
-  import colors from "@utils/colors";
-  import { useState } from "./useState";
+import { ref } from "vue";
+import { useGraph } from "@graph/useGraph";
+import Graph from "@graph/Graph.vue";
+import { useSetupGraph, edgeLabelIsPositiveNumber } from "./useSetupGraph";
+import Button from "@playground/ui/Button.vue";
+import colors from "@utils/colors";
+import { useState } from "./useState";
 import CollabControls from "@playground/graph/CollabControls.vue";
+import Progressbar from "./Progressbar.vue";
 
-  const graphEl = ref<HTMLCanvasElement>();
-  const graph = useGraph(graphEl, {
-    settings: {
-      persistentStorageKey: "min-spanning-tree",
-      userEditableAddedEdgeType: "undirected",
-      edgeInputToLabel: edgeLabelIsPositiveNumber,
-    },
-  });
+const graphEl = ref<HTMLCanvasElement>();
+const graph = useGraph(graphEl, {
+  settings: {
+    persistentStorageKey: "min-spanning-tree",
+    userEditableAddedEdgeType: "undirected",
+    edgeInputToLabel: edgeLabelIsPositiveNumber,
+  },
+});
 
-  useSetupGraph(graph);
+useSetupGraph(graph);
 
-  const {
-    colorizeGraph,
-    handleStepKeys,
-    updateAlgorithm,
-    runSimulation,
-    setStep,
-    stepBackwards,
-    stepForwards,
-    showSimulation,
-    runningSimulation,
-    currentAlgorithm,
-    computedCanBackwardStep,
-    computedCanForwardStep,
-    algorithms,
-    computedCurrentAlgorithmName,
-    computedCurrentStep,
-    computedMaxSteps,
-  } = useState(graph);
+const {
+  colorizeGraph,
+  handleStepKeys,
+  updateAlgorithm,
+  runSimulation,
+  setStep,
+  stepBackwards,
+  stepForwards,
+  showSimulation,
+  runningSimulation,
+  currentAlgorithm,
+  computedCanBackwardStep,
+  computedCanForwardStep,
+  algorithms,
+  computedCurrentAlgorithmName,
+  computedCurrentStep,
+  computedMaxSteps,
+} = useState(graph);
 
-  graph.subscribe("onStructureChange", colorizeGraph);
-  graph.subscribe("onEdgeLabelChange", colorizeGraph);
-  graph.subscribe("onKeydown", handleStepKeys);
+graph.subscribe("onStructureChange", colorizeGraph);
+graph.subscribe("onEdgeLabelChange", colorizeGraph);
+graph.subscribe("onKeydown", handleStepKeys);
 </script>
 
 <template>
@@ -52,10 +53,7 @@ import CollabControls from "@playground/graph/CollabControls.vue";
     >
       Exit {{ computedCurrentAlgorithmName }} Simulation
     </Button>
-    <div
-      v-else
-      class="absolute m-3 flex gap-3 z-50"
-    >
+    <div v-else class="absolute m-3 flex gap-3 z-50">
       <Button
         v-for="(algorithm, index) in algorithms"
         :key="index"
@@ -69,31 +67,36 @@ import CollabControls from "@playground/graph/CollabControls.vue";
     </div>
     <div
       v-if="currentAlgorithm && showSimulation"
-      class="absolute m-3 flex gap-3 z-50 bottom-2 w-full justify-center items-end"
+      class="absolute m-3 flex z-50 bottom-2 w-full justify-center items-end"
     >
-      <Button
-        @click="stepBackwards(), (runningSimulation = false)"
-        :color="computedCanBackwardStep ? undefined : colors.SLATE_400"
-        class="text-4xl h-24 w-24 rounded-full"
-      >
-        ◀
-      </Button>
-      <div class="flex flex-col text-center text-white">
-        <p class="mb-2">{{ computedCurrentStep }} / {{ computedMaxSteps }}</p>
-        <Button
-          @click="runSimulation"
-          class="text-4xl h-24 w-24 rounded-full"
-        >
-          ⏯
-        </Button>
+    <div class="flex flex-col text-center text-white items-center">
+      <div class="w-96 flex flex-wrap justify-center">
+        <Progressbar :start-progress="0" :current-progress="computedCurrentStep" :end-progress="computedMaxSteps" :theme="{
+          progressColor: colors.GREEN_400,
+          borderRadius: 20,
+        }" />
+          <p class="mb-2 text-white">{{ computedCurrentStep }} / {{ computedMaxSteps }}</p>
+        </div>
+       <div class="flex gap-3">
+         <Button
+           @click="stepBackwards(), (runningSimulation = false)"
+           :color="computedCanBackwardStep ? undefined : colors.SLATE_400"
+           class="text-4xl h-24 w-24 rounded-full"
+         >
+           ◀
+         </Button>
+         <Button @click="runSimulation" class="text-4xl h-24 w-24 rounded-full">
+           ⏯
+         </Button>
+         <Button
+           @click="stepForwards(), (runningSimulation = false)"
+           :color="computedCanForwardStep ? undefined : colors.SLATE_400"
+           class="text-4xl h-24 w-24 rounded-full"
+         >
+           ▶
+         </Button>
+       </div>
       </div>
-      <Button
-        @click="stepForwards(), (runningSimulation = false)"
-        :color="computedCanForwardStep ? undefined : colors.SLATE_400"
-        class="text-4xl h-24 w-24 rounded-full"
-      >
-        ▶
-      </Button>
     </div>
     <div
       v-else-if="currentAlgorithm"
@@ -106,10 +109,7 @@ import CollabControls from "@playground/graph/CollabControls.vue";
         Run Simulation
       </Button>
     </div>
-    <Graph
-      @graph-ref="(el) => (graphEl = el)"
-      :graph="graph"
-    />
+    <Graph @graph-ref="(el) => (graphEl = el)" :graph="graph" />
 
     <div class="absolute right-0 p-3 h-14 flex gap-3 bottom-0">
       <CollabControls :graph="graph" />
