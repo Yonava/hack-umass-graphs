@@ -17,7 +17,7 @@ export const useFlowProperties = (graph: Graph) => {
 
   const maxFlow = ref<number | undefined>()
 
-  const resetEdges = () => {
+  const cleanupResidualEdges = () => {
     for (const edge of graph.edges.value) {
       const isResidual = edge.id.startsWith('residual')
       if (isResidual) {
@@ -49,7 +49,7 @@ export const useFlowProperties = (graph: Graph) => {
   const activeEdgeIds = ref<string[]>([])
 
   const recompute = async () => {
-    resetEdges()
+    cleanupResidualEdges()
     createResidualEdges()
     const src = graph.nodes.value.find((n) => n.label === SOURCE_LABEL)
     const sink = graph.nodes.value.find((n) => n.label === SINK_LABEL)
@@ -92,7 +92,7 @@ export const useFlowProperties = (graph: Graph) => {
     maxFlow: readonly(maxFlow),
     recompute,
     createResidualEdges,
-    resetEdges
+    cleanupResidualEdges
   }
 };
 

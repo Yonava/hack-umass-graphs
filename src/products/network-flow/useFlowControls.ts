@@ -1,10 +1,15 @@
 import type { GNode, Graph } from "@graph/types";
+import { useTheme } from "@graph/themes/useTheme";
 import { ref } from "vue";
+import colors from "@utils/colors";
+import { color } from "@codemirror/theme-one-dark";
 
 export const SOURCE_LABEL = "S";
 export const SINK_LABEL = "T";
 
 export const useFlowControls = (graph: Graph) => {
+
+  const { setTheme } = useTheme(graph, 'flow');
 
   const getNewLabel = () => {
     const alphabetWithoutST = "ABCDEFGHIJKLMNOPQRUVWXYZ";
@@ -59,6 +64,17 @@ export const useFlowControls = (graph: Graph) => {
     graph.trackGraphState();
     makingSink.value = false;
   }
+
+  const colorSourceAndSink = (node: GNode) => {
+    if (graph.isHighlighted(node.id)) return
+    const isSource = node.label === SOURCE_LABEL;
+    const isSink = node.label === SINK_LABEL;
+    if (isSource) return colors.BLUE_600;
+    else if (isSink) return colors.RED_600;
+  }
+
+  setTheme('nodeBorderColor', colorSourceAndSink);
+  setTheme('nodeAnchorColor', colorSourceAndSink);
 
   return {
     makeSource,
