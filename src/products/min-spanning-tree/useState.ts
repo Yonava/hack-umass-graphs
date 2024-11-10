@@ -93,8 +93,10 @@ export const useState = (graph: Graph) => {
   const handleStepKeys = (e: KeyboardEvent) => {
     if (e.key === "[" && computedCanBackwardStep.value) {
       stepBackwards();
+      runningSimulation.value = false
     } else if (e.key === "]" && computedCanForwardStep.value) {
       stepForwards();
+      runningSimulation.value = false
     }
   };
 
