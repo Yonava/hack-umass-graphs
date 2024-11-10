@@ -9,6 +9,7 @@
   import { FLOW_GRAPH_SETTINGS } from "./settings";
   import { useFlowProperties } from "./useFlowProperties";
   import Button from "@playground/ui/Button.vue";
+import { useResidualEdges } from "./useResidualEdges";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
@@ -18,6 +19,7 @@
   useEdgeThickener(graph);
   const controls = useFlowControls(graph);
   const { maxFlow } = useFlowProperties(graph);
+  const { createResidualEdges, cleanupResidualEdges } = useResidualEdges(graph);
 </script>
 
 <template>
@@ -35,9 +37,8 @@
 
     <div class="absolute top-0 right-0 p-3 text-white flex gap-3">
       <span class="font-bold text-xl">Max Flow: {{ maxFlow ?? "N/A" }}</span>
-      <!-- <Button @click="recompute">recompute</Button>
-      <Button @click="cleanupResidualEdges">reset edges</Button>
-      <Button @click="createResidualEdges">create residual edges</Button> -->
+      <Button @click="cleanupResidualEdges">Cleanup Residuals</Button>
+      <Button @click="createResidualEdges">Create Residuals</Button>
     </div>
   </div>
 </template>

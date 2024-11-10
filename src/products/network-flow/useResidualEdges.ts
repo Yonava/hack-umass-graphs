@@ -1,11 +1,12 @@
 import type { Graph } from "@graph/types";
 
-export const RESIDUAL = 'residual'
+export const RESIDUAL_ID = 'residual'
 
 export const useResidualEdges = (graph: Graph) => {
 
-  const isResidual = (edgeId: string) => edgeId.startsWith(RESIDUAL)
+  const isResidual = (edgeId: string) => edgeId.startsWith(RESIDUAL_ID)
   const getIdFromResidual = (residualId: string) => residualId.split('-')[1]
+  const getResidualId = (edgeId: string) => `${RESIDUAL_ID}-${edgeId}`
 
   const cleanupResidualEdges = () => {
     for (const edge of graph.edges.value) {
@@ -18,12 +19,12 @@ export const useResidualEdges = (graph: Graph) => {
       correspondingEdge.label = (corrEdgeWeight + resEdgeWeight).toString()
     }
 
-    graph.edges.value = graph.edges.value.filter((e) => !e.id.startsWith(RESIDUAL))
+    graph.edges.value = graph.edges.value.filter((e) => !e.id.startsWith(RESIDUAL_ID))
     graph.repaint('edge-label-change')()
   }
 
   const createResidualEdges = () => {
-    const residualsAlreadyExist = graph.edges.value.some((e) => e.id.startsWith(RESIDUAL))
+    const residualsAlreadyExist = graph.edges.value.some((e) => e.id.startsWith(RESIDUAL_ID))
     if (residualsAlreadyExist) return
 
     const residualEdges = graph.edges.value.map((e) => ({
@@ -31,7 +32,7 @@ export const useResidualEdges = (graph: Graph) => {
       to: e.from,
       from: e.to,
       label: '0',
-      id: `${RESIDUAL}-${e.id}`
+      id: getResidualId(e.id)
     }))
 
     graph.edges.value.push(...residualEdges)
@@ -42,6 +43,7 @@ export const useResidualEdges = (graph: Graph) => {
     cleanupResidualEdges,
     createResidualEdges,
     isResidual,
-    getIdFromResidual
+    getIdFromResidual,
+    getResidualId,
   }
 }

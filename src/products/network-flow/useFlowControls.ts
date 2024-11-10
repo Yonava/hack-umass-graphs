@@ -2,11 +2,9 @@ import type { GNode, Graph } from "@graph/types";
 import { useTheme } from "@graph/themes/useTheme";
 import { ref } from "vue";
 import colors from "@utils/colors";
-import { color } from "@codemirror/theme-one-dark";
-import { generateId } from "@graph/helpers";
 
-export const SOURCE_ID = "S";
-export const SINK_ID = "T";
+export const SOURCE_LABEL = "S";
+export const SINK_LABEL = "T";
 
 export const useFlowControls = (graph: Graph) => {
 
@@ -55,9 +53,9 @@ export const useFlowControls = (graph: Graph) => {
     makingSource.value = true;
     const node = await captureNode();
     graph.nodes.value.forEach(node => {
-      if (node.id === SOURCE_ID) node.id = generateId();
+      if (node.id === SOURCE_LABEL) node.label = getNewLabel();
     });
-    node.id = SOURCE_ID;
+    node.label = SOURCE_LABEL;
     graph.trackGraphState();
     makingSource.value = false;
   }
@@ -67,29 +65,23 @@ export const useFlowControls = (graph: Graph) => {
     makingSink.value = true;
     const node = await captureNode();
     graph.nodes.value.forEach(node => {
-      if (node.label === SINK_ID) node.id = generateId();
+      if (node.label === SINK_LABEL) node.label = getNewLabel();
     });
-    node.id = SINK_ID;
+    node.label = SINK_LABEL;
     graph.trackGraphState();
     makingSink.value = false;
   }
 
   const colorSourceAndSink = (node: GNode) => {
     if (graph.isHighlighted(node.id)) return
-    const isSource = node.id === SOURCE_ID;
-    const isSink = node.id === SINK_ID;
+    const isSource = node.label === SOURCE_LABEL;
+    const isSink = node.label === SINK_LABEL;
     if (isSource) return colors.BLUE_600;
     else if (isSink) return colors.RED_600;
   }
 
-  const sourceSinkLabel = (node: GNode) => {
-    if (node.id === SOURCE_ID) return 'S';
-    else if (node.id === SINK_ID) return 'T';
-  }
-
   setTheme('nodeBorderColor', colorSourceAndSink);
   setTheme('nodeAnchorColor', colorSourceAndSink);
-  setTheme('nodeTextColor', sourceSinkLabel);
 
   return {
     makeSource,
