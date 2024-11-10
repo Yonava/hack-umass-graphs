@@ -80,19 +80,18 @@ const clickRunSimulation = () => {
       class="absolute m-3 flex z-50 bottom-2 w-full justify-center items-end"
     >
       <div class="flex flex-col items-center">
-        <div class="w-96">
+        <div class="w-96 mb-5">
           <Progressbar
             :start-progress="0"
             :current-progress="computedCurrentStep"
             :end-progress="computedMaxSteps"
             :theme="{
-              progressColor: colors.GREEN_400,
+              progressColor: colors.GRAY_200,
+              backgroundColor: colors.SLATE_500,
               borderRadius: 20,
             }"
+            class="border-gray-200 border-2"
           />
-          <p class="mb-2 text-white text-center">
-            {{ computedCurrentStep }} / {{ computedMaxSteps }}
-          </p>
         </div>
         <div class="flex gap-3">
           <Button
