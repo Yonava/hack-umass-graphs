@@ -10,9 +10,6 @@ export default defineConfig({
   test: {
     silent: true,
   },
-  build: {
-    outDir: '../server/dist/public'
-  },
   resolve: {
     alias: {
       '@utils': fileURLToPath(new URL('./src/utils', import.meta.url)),
