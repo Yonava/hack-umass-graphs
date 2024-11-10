@@ -104,6 +104,7 @@ export const useState = (graph: Graph) => {
   const runSimulation = () => {
     if (runningSimulation.value) return (runningSimulation.value = false);
     runningSimulation.value = true;
+    graph.settings.value.userEditable = false
 
     const runStep = () => {
       if (computedCanForwardStep.value && runningSimulation.value) {
@@ -111,6 +112,8 @@ export const useState = (graph: Graph) => {
         setTimeout(runStep, 1000);
       } else {
         runningSimulation.value = false;
+        graph.settings.value.userEditable = true
+
       }
     };
 

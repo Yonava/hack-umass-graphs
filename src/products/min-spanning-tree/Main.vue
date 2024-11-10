@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import { useGraph } from "@graph/useGraph";
 import Graph from "@graph/Graph.vue";
 import { useSetupGraph, edgeLabelIsPositiveNumber } from "./useSetupGraph";
