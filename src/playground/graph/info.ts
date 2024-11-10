@@ -8,11 +8,11 @@ const info: ProductInfo = {
   name: 'Graph Playground',
   description: 'A playground for graph algorithms',
   productId: 'graph-playground',
-  menu: {
-    name: 'Graph Playground',
-    description: 'A playground for magic graphs',
-    thumbnail: '/products/thumbnails/graph-playground.png',
-  },
+  // menu: {
+  //   name: 'Graph Playground',
+  //   description: 'A playground for magic graphs',
+  //   thumbnail: '/products/thumbnails/graph-playground.png',
+  // },
 }
 
 export default info

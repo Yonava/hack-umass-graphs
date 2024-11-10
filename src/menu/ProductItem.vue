@@ -8,7 +8,7 @@
 
 <template>
   <div
-    class="group hover:scale-110 transition-all duration-500 ease-out relative flex items-center justify-center"
+    class="group hover:scale-110 transition-all duration-500 ease-out relative flex items-center justify-center max-w-44"
   >
     <div>
       <div class="relative w-60 h-60 flex items-center justify-center">
@@ -24,7 +24,7 @@
         </div>
       </div>
       <h2
-        class="text-center font-bold text-2xl mt-4 transition duration-500"
+        class="text-center font-bold text-2xl mt-4 transition duration-500 h-8"
       >
         {{ product.menu.name }}
       </h2>

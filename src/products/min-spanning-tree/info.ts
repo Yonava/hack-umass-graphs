@@ -11,7 +11,7 @@ const info: ProductInfo = {
   menu: {
     name: 'Minimum Spanning Trees',
     description: 'Visualize Minimum Spanning Trees',
-    thumbnail: '/products/thumbnails/graph-playground.png',
+    thumbnail: '/products/thumbnails/mst.png',
   },
 }
 

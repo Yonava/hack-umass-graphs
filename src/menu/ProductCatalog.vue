@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div class="flex items-center justify-center gap-10">
+  <div class="flex items-center justify-center gap-[100px]">
     <div v-for="product in products">
       <router-link :to="product.route.path">
         <ProductItem :product="product" />

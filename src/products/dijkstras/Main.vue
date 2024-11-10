@@ -6,12 +6,14 @@
   import { useDijkstraTrace } from "./dijkstras"
   import { useTheme } from "@graph/themes/useTheme"
   import { useSimulator } from "./useSimulator.ts"
+import { THEMES } from "@graph/themes";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
     settings: {
       persistentStorageKey: "dijkstras",
-    }
+    },
+    theme: THEMES.girl
   });
 
   const { dijkstras } = useDijkstraTrace(graph);
