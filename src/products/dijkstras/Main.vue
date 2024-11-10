@@ -5,6 +5,7 @@
   import { useSimulator } from "./useSimulator";
   import SimulatorControls from "./SimulatorControls.vue";
   import Button from "@playground/ui/Button.vue";
+  import colors  from "@colors";
   import CostDisplay from "./CostDisplay.vue";
 
   const graphEl = ref<HTMLCanvasElement>();
@@ -48,6 +49,8 @@
     <Button
       v-else
       @click="simControls.stop"
+      :color="colors.RED_600"
+      :text-color="colors.WHITE"
     >
       Stop Simulation
     </Button>
