@@ -17,7 +17,7 @@
 
   useEdgeThickener(graph);
   const controls = useFlowControls(graph);
-  const { maxFlow, recompute, cleanupResidualEdges, createResidualEdges } = useFlowProperties(graph);
+  const { maxFlow } = useFlowProperties(graph);
 </script>
 
 <template>
@@ -35,9 +35,9 @@
 
     <div class="absolute top-0 right-0 p-3 text-white flex gap-3">
       <span class="font-bold text-xl">Max Flow: {{ maxFlow ?? "N/A" }}</span>
-      <Button @click="recompute">recompute</Button>
+      <!-- <Button @click="recompute">recompute</Button>
       <Button @click="cleanupResidualEdges">reset edges</Button>
-      <Button @click="createResidualEdges">create residual edges</Button>
+      <Button @click="createResidualEdges">create residual edges</Button> -->
     </div>
   </div>
 </template>

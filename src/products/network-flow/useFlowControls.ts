@@ -3,9 +3,10 @@ import { useTheme } from "@graph/themes/useTheme";
 import { ref } from "vue";
 import colors from "@utils/colors";
 import { color } from "@codemirror/theme-one-dark";
+import { generateId } from "@graph/helpers";
 
-export const SOURCE_LABEL = "S";
-export const SINK_LABEL = "T";
+export const SOURCE_ID = "S";
+export const SINK_ID = "T";
 
 export const useFlowControls = (graph: Graph) => {
 
@@ -23,6 +24,12 @@ export const useFlowControls = (graph: Graph) => {
     node.label = getNewLabel();
   })
 
+  graph.subscribe('onEdgeAdded', (edge) => {
+    if (edge.to === edge.from) return graph.removeEdge(edge.id);
+    const edgeAlreadyOnPath = graph.edges.value.some(e => e.from === edge.to && e.to === edge.from);
+    if (edgeAlreadyOnPath) return graph.removeEdge(edge.id);
+  })
+
   const captureNodeFn = (res: (value: GNode | PromiseLike<GNode>) => void) => (event: MouseEvent) => {
     const { offsetX, offsetY } = event;
     const node = graph.getNodeByCoordinates(offsetX, offsetY);
@@ -31,6 +38,7 @@ export const useFlowControls = (graph: Graph) => {
 
   const captureNode = async () => {
     graph.settings.value.userEditable = false;
+    graph.settings.value.focusable = false;
     let captureFn;
     const node = await new Promise<GNode>((res) => {
       captureFn = captureNodeFn(res);
@@ -38,6 +46,7 @@ export const useFlowControls = (graph: Graph) => {
     });
     if (captureFn) graph.unsubscribe('onClick', captureFn);
     graph.settings.value.userEditable = true;
+    graph.settings.value.focusable = true;
     return node;
   }
 
@@ -46,9 +55,9 @@ export const useFlowControls = (graph: Graph) => {
     makingSource.value = true;
     const node = await captureNode();
     graph.nodes.value.forEach(node => {
-      if (node.label === SOURCE_LABEL) node.label = getNewLabel();
+      if (node.id === SOURCE_ID) node.id = generateId();
     });
-    node.label = SOURCE_LABEL;
+    node.id = SOURCE_ID;
     graph.trackGraphState();
     makingSource.value = false;
   }
@@ -58,23 +67,29 @@ export const useFlowControls = (graph: Graph) => {
     makingSink.value = true;
     const node = await captureNode();
     graph.nodes.value.forEach(node => {
-      if (node.label === SINK_LABEL) node.label = getNewLabel();
+      if (node.label === SINK_ID) node.id = generateId();
     });
-    node.label = SINK_LABEL;
+    node.id = SINK_ID;
     graph.trackGraphState();
     makingSink.value = false;
   }
 
   const colorSourceAndSink = (node: GNode) => {
     if (graph.isHighlighted(node.id)) return
-    const isSource = node.label === SOURCE_LABEL;
-    const isSink = node.label === SINK_LABEL;
+    const isSource = node.id === SOURCE_ID;
+    const isSink = node.id === SINK_ID;
     if (isSource) return colors.BLUE_600;
     else if (isSink) return colors.RED_600;
   }
 
+  const sourceSinkLabel = (node: GNode) => {
+    if (node.id === SOURCE_ID) return 'S';
+    else if (node.id === SINK_ID) return 'T';
+  }
+
   setTheme('nodeBorderColor', colorSourceAndSink);
   setTheme('nodeAnchorColor', colorSourceAndSink);
+  setTheme('nodeTextColor', sourceSinkLabel);
 
   return {
     makeSource,
