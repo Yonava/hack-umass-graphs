@@ -5,9 +5,11 @@ import type { Parent, Rank } from "./types";
 
 export const useKruskal = (graph: Graph) => {
 
-  const currentStep = ref(graph.nodes.value.length - 1);
+  const maxSteps = graph.nodes.value.length - 1
+
+  const currentStep = ref(maxSteps);
   
-  graph.subscribe('onStructureChange', () => currentStep.value = graph.nodes.value.length - 1)
+  graph.subscribe('onStructureChange', () => currentStep.value = maxSteps)
 
   const find = (parent: Parent, nodeId: string): string => {
     if (parent.get(nodeId) !== nodeId) {
@@ -58,7 +60,7 @@ export const useKruskal = (graph: Graph) => {
         mst.push(edge);
         union(parent, rank, sourceRoot, targetRoot);
 
-        if (mst.length === graph.nodes.value.length - 1) break;
+        if (mst.length === maxSteps) break;
       }
     }
 
@@ -70,7 +72,7 @@ export const useKruskal = (graph: Graph) => {
   });
 
   const canForwardStep = computed(() => {
-    return currentStep.value < graph.nodes.value.length - 1;
+    return currentStep.value < maxSteps;
   });
 
   const forwardStep = () => {
@@ -82,7 +84,7 @@ export const useKruskal = (graph: Graph) => {
   };
 
   const setStep = (newStep: number) => {
-    if (newStep > graph.nodes.value.length - 1 || newStep < 1) throw new Error('step out of range')
+    if (newStep > maxSteps || newStep < 1) throw new Error('step out of range')
     currentStep.value = newStep
   }
 
@@ -93,6 +95,7 @@ export const useKruskal = (graph: Graph) => {
     setStep,
     canBackwardStep,
     canForwardStep,
-
+    currentStep,
+    maxSteps,
   };
 };

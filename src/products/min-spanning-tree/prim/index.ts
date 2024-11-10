@@ -4,9 +4,11 @@ import { ref, computed } from "vue";
 
 export const usePrims = (graph: Graph) => {
 
-  const currentStep = ref(graph.nodes.value.length - 1);
+  const maxSteps = graph.nodes.value.length - 1
 
-  graph.subscribe('onStructureChange', () => currentStep.value = graph.nodes.value.length - 1)
+  const currentStep = ref(maxSteps);
+
+  graph.subscribe('onStructureChange', () => currentStep.value = maxSteps)
 
 
   const getMinEdge = (edges: GEdge[], inMST: Set<string>): GEdge | null => {
@@ -38,7 +40,7 @@ export const usePrims = (graph: Graph) => {
     const allEdges: GEdge[] = Object.values(clone(graph.edges.value));
 
     while (
-      mst.length < graph.nodes.value.length - 1 &&
+      mst.length < maxSteps &&
       mst.length < currentStep.value
     ) {
       const minEdge = getMinEdge(allEdges, inMST);
@@ -60,7 +62,7 @@ export const usePrims = (graph: Graph) => {
   });
 
   const canForwardStep = computed(() => {
-    return currentStep.value < graph.nodes.value.length - 1;
+    return currentStep.value < maxSteps;
   });
 
   const forwardStep = () => {
@@ -72,7 +74,7 @@ export const usePrims = (graph: Graph) => {
   };
 
   const setStep = (newStep: number) => {
-    if (newStep > graph.nodes.value.length - 1 || newStep < 1) throw new Error('step out of range')
+    if (newStep > maxSteps || newStep < 1) throw new Error('step out of range')
     currentStep.value = newStep
   }
 
@@ -83,5 +85,7 @@ export const usePrims = (graph: Graph) => {
     setStep,
     canBackwardStep,
     canForwardStep,
+    currentStep,
+    maxSteps
   };
 };

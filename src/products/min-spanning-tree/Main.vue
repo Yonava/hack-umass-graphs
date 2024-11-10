@@ -32,7 +32,9 @@ const {
   computedCanBackwardStep,
   computedCanForwardStep,
   algorithms,
-  computeCurrentAlgorithmName,
+  computedCurrentAlgorithmName,
+  computedCurrentStep,
+  computedMaxSteps,
 } = useState(graph);
 
 graph.subscribe("onStructureChange", colorizeGraph);
@@ -46,7 +48,7 @@ graph.subscribe("onKeydown", handleStepKeys);
       v-if="showSimulation"
       @click="(showSimulation = false), (runningSimulation = false)"
       class="absolute m-3 z-50"
-      >Exit {{ computeCurrentAlgorithmName }} Simulation</Button
+      >Exit {{ computedCurrentAlgorithmName }} Simulation</Button
     >
     <div v-else class="absolute m-3 flex gap-3 z-50">
       <Button
@@ -62,7 +64,7 @@ graph.subscribe("onKeydown", handleStepKeys);
     </div>
     <div
       v-if="currentAlgorithm && showSimulation"
-      class="absolute m-3 flex gap-3 z-50 bottom-2 w-full justify-center"
+      class="absolute m-3 flex gap-3 z-50 bottom-2 w-full justify-center items-end"
     >
       <Button
         @click="stepBackwards(), (runningSimulation = false)"
@@ -70,9 +72,14 @@ graph.subscribe("onKeydown", handleStepKeys);
         class="text-4xl h-24 w-24 rounded-full"
         >◀</Button
       >
-      <Button @click="runSimulation" class="text-4xl h-24 w-24 rounded-full"
-        >⏯</Button
-      >
+      <div class="flex flex-col text-center text-white">
+        <p>
+          {{ computedCurrentStep }} / {{ computedMaxSteps }}
+        </p>
+        <Button @click="runSimulation" class="text-4xl h-24 w-24 rounded-full"
+          >⏯</Button
+        >
+      </div>
       <Button
         @click="stepForwards(), (runningSimulation = false)"
         :color="computedCanForwardStep ? undefined : colors.SLATE_400"

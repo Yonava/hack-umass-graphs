@@ -12,6 +12,8 @@ export const useState = (graph: Graph) => {
     setStep: kSetStep,
     canBackwardStep: kCanBackwardStep,
     canForwardStep: kCanForwardStep,
+    currentStep: kCurrentStep,
+    maxSteps: kMaxSteps,
   } = useKruskal(graph);
 
   const {
@@ -21,6 +23,8 @@ export const useState = (graph: Graph) => {
     setStep: pSetStep,
     canBackwardStep: pCanBackwardStep,
     canForwardStep: pCanForwardStep,
+    currentStep: pCurrentStep,
+    maxSteps: pMaxSteps,
   } = usePrims(graph);
 
   type Algorithm = "kruskal" | "prim" | undefined;
@@ -75,6 +79,16 @@ export const useState = (graph: Graph) => {
       ? kCanBackwardStep.value
       : pCanBackwardStep.value;
   });
+  const computedMaxSteps = computed(() => {
+    return currentAlgorithm.value === "kruskal"
+      ? kMaxSteps
+      : pMaxSteps;
+  });
+  const computedCurrentStep = computed(() => {
+    return currentAlgorithm.value === "kruskal"
+      ? kCurrentStep.value
+      : pCurrentStep.value;
+  });
 
   const handleStepKeys = (e: KeyboardEvent) => {
     if (e.key === "[" && computedCanBackwardStep.value) {
@@ -103,7 +117,7 @@ export const useState = (graph: Graph) => {
     runStep();
   };
 
-  const computeCurrentAlgorithmName = computed(() => {
+  const computedCurrentAlgorithmName = computed(() => {
     return algorithms[
       algorithms.findIndex((a) => currentAlgorithm.value === a.value)
     ].label;
@@ -123,6 +137,8 @@ export const useState = (graph: Graph) => {
     computedCanBackwardStep,
     computedCanForwardStep,
     algorithms,
-    computeCurrentAlgorithmName,
+    computedCurrentAlgorithmName,
+    computedMaxSteps,
+    computedCurrentStep,
   };
 };
