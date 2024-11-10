@@ -66,7 +66,7 @@ export const usePrims = (graph: Graph) => {
   });
 
   const forwardStep = () => {
-    if (canForwardStep) currentStep.value++;
+    if (canForwardStep.value) currentStep.value++;
   };
 
   const backwardStep = () => {
