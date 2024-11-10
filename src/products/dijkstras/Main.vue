@@ -5,8 +5,9 @@
   import { useSimulator } from "./useSimulator";
   import SimulatorControls from "./SimulatorControls.vue";
   import Button from "@playground/ui/Button.vue";
-  import colors  from "@colors";
+  import colors from "@colors";
   import CostDisplay from "./CostDisplay.vue";
+  import CollabControls from "@playground/graph/CollabControls.vue";
 
   const graphEl = ref<HTMLCanvasElement>();
   const graph = useGraph(graphEl, {
@@ -23,9 +24,9 @@
     return alphabet[label];
   };
 
-  graph.subscribe('onNodeAdded', (node) => {
+  graph.subscribe("onNodeAdded", (node) => {
     node.label = getNewLabel();
-  })
+  });
 
   const simControls = useSimulator(graph);
 </script>
@@ -65,5 +66,12 @@
 
   <div class="absolute bottom-8 w-full flex justify-center items-center p-3">
     <SimulatorControls :controls="simControls" />
+  </div>
+
+  <div
+    v-if="!simControls.active.value"
+    class="absolute right-0 p-3 h-14 flex gap-3 bottom-0"
+  >
+    <CollabControls :graph="graph" />
   </div>
 </template>

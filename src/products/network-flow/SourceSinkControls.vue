@@ -15,7 +15,7 @@
     <Button
       v-if="!simControls.simulationActive.value"
       :style="{
-        backgroundColor: colors.BLUE_600,
+        backgroundColor: colors.BLUE_500,
         color: colors.WHITE,
       }"
       @click="simControls.startSimulation"

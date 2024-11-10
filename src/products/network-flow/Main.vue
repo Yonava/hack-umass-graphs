@@ -45,7 +45,10 @@
       <NetworkFlowSim :sim-controls="simulationControls" />
     </div>
 
-    <div class="absolute right-0 p-3 h-14 flex gap-3 bottom-0">
+    <div
+      v-if="!simulationControls.simulationActive.value"
+      class="absolute right-0 p-3 h-14 flex gap-3 bottom-0"
+    >
       <CollabControls :graph="graph" />
     </div>
   </div>
