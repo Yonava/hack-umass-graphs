@@ -11,7 +11,7 @@ const info: ProductInfo = {
   menu: {
     name: 'Network Flow',
     description: 'Visualize Network Flow',
-    thumbnail: '/products/thumbnails/graph-playground.png',
+    thumbnail: '/products/thumbnails/network-flow.png',
   },
 }
 
